@@ -1,5 +1,4 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const csv = require('csv-parser');
 const fs = require('fs');
@@ -58,36 +57,9 @@ app.use('/data/imgs', express.static(path.join(__dirname, '../data/imgs')));
 app.use(rateLimit);
 app.use(securityHeaders);
 
-// データベース初期化（Vercel用にファイルベースに変更）
-const dbPath = process.env.NODE_ENV === 'production' 
-  ? '/tmp/orders.db' 
-  : path.join(__dirname, '../orders.db');
-
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('データベース接続エラー:', err);
-  } else {
-    console.log('データベースに接続しました:', dbPath);
-  }
-});
-
-// 注文テーブルを作成
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS orders (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      qr_id TEXT NOT NULL,
-      menu_id TEXT NOT NULL,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `, (err) => {
-    if (err) {
-      console.error('テーブル作成エラー:', err);
-    } else {
-      console.log('注文テーブルが作成されました');
-    }
-  });
-});
+// メモリベースのデータストア
+const orders = [];
+let orderIdCounter = 1;
 
 // CSVファイルを読み込んでJSONに変換
 function loadMenuData() {
@@ -181,21 +153,16 @@ app.post('/api/orders', (req, res) => {
       return res.status(400).json({ error: 'データが長すぎます' });
     }
 
-    const stmt = db.prepare('INSERT INTO orders (qr_id, menu_id) VALUES (?, ?)');
-    stmt.run([qr_id, menu_id], function(err) {
-      if (err) {
-        console.error('注文の登録エラー:', err);
-        return res.status(500).json({ error: '注文の登録に失敗しました' });
-      }
-      
-      res.json({
-        id: this.lastID,
-        qr_id,
-        menu_id,
-        timestamp: new Date().toISOString()
-      });
-    });
-    stmt.finalize();
+    const newOrder = {
+      id: orderIdCounter++,
+      qr_id,
+      menu_id,
+      timestamp: new Date().toISOString()
+    };
+    
+    orders.push(newOrder);
+    
+    res.json(newOrder);
   } catch (error) {
     console.error('注文処理エラー:', error);
     res.status(500).json({ error: '注文処理に失敗しました' });
@@ -212,18 +179,12 @@ app.get('/api/orders/:qrId', (req, res) => {
       return res.status(400).json({ error: '無効なQR IDです' });
     }
     
-    db.all(
-      'SELECT * FROM orders WHERE qr_id = ? ORDER BY timestamp DESC LIMIT 50',
-      [qrId],
-      (err, rows) => {
-        if (err) {
-          console.error('注文履歴の取得エラー:', err);
-          return res.status(500).json({ error: '注文履歴の取得に失敗しました' });
-        }
-        
-        res.json(rows);
-      }
-    );
+    const filteredOrders = orders
+      .filter(order => order.qr_id === qrId)
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, 50);
+    
+    res.json(filteredOrders);
   } catch (error) {
     console.error('注文履歴取得エラー:', error);
     res.status(500).json({ error: '注文履歴の取得に失敗しました' });
@@ -238,17 +199,11 @@ app.get('/api/orders', (req, res) => {
       return res.status(403).json({ error: '本番環境では利用できません' });
     }
     
-    db.all(
-      'SELECT * FROM orders ORDER BY timestamp DESC LIMIT 100',
-      (err, rows) => {
-        if (err) {
-          console.error('全注文履歴の取得エラー:', err);
-          return res.status(500).json({ error: '全注文履歴の取得に失敗しました' });
-        }
-        
-        res.json(rows);
-      }
-    );
+    const allOrders = orders
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(0, 100);
+    
+    res.json(allOrders);
   } catch (error) {
     console.error('全注文履歴取得エラー:', error);
     res.status(500).json({ error: '全注文履歴の取得に失敗しました' });
@@ -261,13 +216,18 @@ app.get('/api/health', (req, res) => {
     status: 'ok', 
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
-    database: dbPath
+    ordersCount: orders.length
   });
 });
 
 // フロントエンドのルートを処理（SPA対応）
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  const indexPath = path.join(__dirname, '../frontend/dist/index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).json({ error: 'Frontend not found' });
+  }
 });
 
 // サーバー起動（Vercelでは自動的にポートが設定される）
@@ -282,14 +242,7 @@ if (process.env.NODE_ENV !== 'production') {
 // エラーハンドリング
 process.on('SIGINT', () => {
   console.log('サーバーを停止しています...');
-  db.close((err) => {
-    if (err) {
-      console.error('データベースのクローズエラー:', err);
-    } else {
-      console.log('データベース接続を閉じました');
-    }
-    process.exit(0);
-  });
+  process.exit(0);
 });
 
 // 未処理エラーのハンドリング
