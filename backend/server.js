@@ -49,7 +49,7 @@ function securityHeaders(req, res, next) {
 // ミドルウェア
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://tearoom-qr-menu.vercel.app', 'https://tearoom-qr-menu-git-main.vercel.app'] 
+    ? ['https://tearoom-fxneny2fx-shigerus-projects-3d4cd7f8.vercel.app', 'https://tearoom-msoaj7pv2-shigerus-projects-3d4cd7f8.vercel.app'] 
     : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:3001']
 }));
 app.use(express.json({ limit: '1mb' }));
