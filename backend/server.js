@@ -1,8 +1,14 @@
+// 環境変数の読み込み（開発環境用）
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const express = require('express');
 const cors = require('cors');
 const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
+const supabase = require('./supabase');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -57,7 +63,7 @@ app.use('/data/imgs', express.static(path.join(__dirname, '../data/imgs')));
 app.use(rateLimit);
 app.use(securityHeaders);
 
-// メモリベースのデータストア
+// メモリベースのデータストア（フォールバック用）
 const orders = [];
 let orderIdCounter = 1;
 
@@ -136,7 +142,7 @@ app.get('/api/menu', async (req, res) => {
 });
 
 // 注文を登録
-app.post('/api/orders', (req, res) => {
+app.post('/api/orders', async (req, res) => {
   try {
     const { qr_id, menu_id } = req.body;
     
@@ -154,15 +160,30 @@ app.post('/api/orders', (req, res) => {
     }
 
     const newOrder = {
-      id: orderIdCounter++,
       qr_id,
       menu_id,
       timestamp: new Date().toISOString()
     };
-    
-    orders.push(newOrder);
-    
-    res.json(newOrder);
+
+    if (supabase) {
+      // Supabaseを使用
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([newOrder])
+        .select();
+
+      if (error) {
+        console.error('Supabase注文登録エラー:', error);
+        return res.status(500).json({ error: '注文の登録に失敗しました' });
+      }
+
+      res.json(data[0]);
+    } else {
+      // メモリベースのフォールバック
+      newOrder.id = orderIdCounter++;
+      orders.push(newOrder);
+      res.json(newOrder);
+    }
   } catch (error) {
     console.error('注文処理エラー:', error);
     res.status(500).json({ error: '注文処理に失敗しました' });
@@ -170,7 +191,7 @@ app.post('/api/orders', (req, res) => {
 });
 
 // 特定のQR IDの注文履歴を取得
-app.get('/api/orders/:qrId', (req, res) => {
+app.get('/api/orders/:qrId', async (req, res) => {
   try {
     const { qrId } = req.params;
     
@@ -179,12 +200,30 @@ app.get('/api/orders/:qrId', (req, res) => {
       return res.status(400).json({ error: '無効なQR IDです' });
     }
     
-    const filteredOrders = orders
-      .filter(order => order.qr_id === qrId)
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-      .slice(0, 50);
-    
-    res.json(filteredOrders);
+    if (supabase) {
+      // Supabaseを使用
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('qr_id', qrId)
+        .order('timestamp', { ascending: false })
+        .limit(50);
+
+      if (error) {
+        console.error('Supabase注文履歴取得エラー:', error);
+        return res.status(500).json({ error: '注文履歴の取得に失敗しました' });
+      }
+
+      res.json(data);
+    } else {
+      // メモリベースのフォールバック
+      const filteredOrders = orders
+        .filter(order => order.qr_id === qrId)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .slice(0, 50);
+      
+      res.json(filteredOrders);
+    }
   } catch (error) {
     console.error('注文履歴取得エラー:', error);
     res.status(500).json({ error: '注文履歴の取得に失敗しました' });
@@ -192,18 +231,35 @@ app.get('/api/orders/:qrId', (req, res) => {
 });
 
 // 全注文履歴を取得（管理者用）
-app.get('/api/orders', (req, res) => {
+app.get('/api/orders', async (req, res) => {
   try {
     // 本番環境では認証を追加することを推奨
     if (process.env.NODE_ENV === 'production') {
       return res.status(403).json({ error: '本番環境では利用できません' });
     }
     
-    const allOrders = orders
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-      .slice(0, 100);
-    
-    res.json(allOrders);
+    if (supabase) {
+      // Supabaseを使用
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('timestamp', { ascending: false })
+        .limit(100);
+
+      if (error) {
+        console.error('Supabase全注文履歴取得エラー:', error);
+        return res.status(500).json({ error: '全注文履歴の取得に失敗しました' });
+      }
+
+      res.json(data);
+    } else {
+      // メモリベースのフォールバック
+      const allOrders = orders
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .slice(0, 100);
+      
+      res.json(allOrders);
+    }
   } catch (error) {
     console.error('全注文履歴取得エラー:', error);
     res.status(500).json({ error: '全注文履歴の取得に失敗しました' });
@@ -211,13 +267,44 @@ app.get('/api/orders', (req, res) => {
 });
 
 // ヘルスチェックエンドポイント
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    ordersCount: orders.length
-  });
+app.get('/api/health', async (req, res) => {
+  try {
+    let ordersCount = orders.length;
+    let supabaseStatus = 'Not configured';
+    
+    if (supabase) {
+      supabaseStatus = 'Connected';
+      const { count, error } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!error) {
+        ordersCount = count;
+      }
+    }
+
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      ordersCount,
+      database: supabase ? 'Supabase' : 'Memory',
+      supabaseStatus,
+      hasSupabaseUrl: !!process.env.SUPABASE_URL,
+      hasSupabaseKey: !!process.env.SUPABASE_ANON_KEY
+    });
+  } catch (error) {
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      ordersCount: orders.length,
+      database: 'Memory',
+      supabaseStatus: 'Error',
+      hasSupabaseUrl: !!process.env.SUPABASE_URL,
+      hasSupabaseKey: !!process.env.SUPABASE_ANON_KEY
+    });
+  }
 });
 
 // フロントエンドのルートを処理（SPA対応）
@@ -236,6 +323,7 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`サーバーが起動しました: http://localhost:${PORT}`);
     console.log(`APIエンドポイント: http://localhost:${PORT}/api`);
     console.log(`環境: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`データベース: ${supabase ? 'Supabase' : 'Memory'}`);
   });
 }
 

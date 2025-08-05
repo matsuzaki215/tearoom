@@ -8,13 +8,18 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["qr-menu", "express"],
+  "keywords": [
+    "qr-menu",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@supabase/supabase-js": "^2.53.0",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
+    "dotenv": "^17.2.1",
     "express": "^4.18.2"
   },
   "devDependencies": {
