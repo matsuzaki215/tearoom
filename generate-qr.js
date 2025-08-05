@@ -32,7 +32,7 @@ if (!fs.existsSync(qrDir)) {
 }
 
 // デプロイ後のURL（実際のURLに変更してください）
-const baseURL = 'https://your-app-name.vercel.app';
+const baseURL = 'https://tearoom-murex.vercel.app';
 
 // 各テーブルのQRコードを生成
 const tables = [
