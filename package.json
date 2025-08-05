@@ -1,19 +1,14 @@
 {
-  "name": "qr-menu-system",
+  "name": "tearoom-qr-menu",
   "version": "1.0.0",
   "description": "QRメニューWebシステム",
-  "main": "backend/server.js",
+  "private": true,
   "scripts": {
-    "build": "cd frontend && npm run build",
-    "start": "cd backend && npm start",
+    "build": "cd frontend && npm install && npm run build",
     "dev": "cd backend && npm run dev",
-    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
-    "vercel-build": "cd frontend && npm run build"
+    "start": "cd backend && npm start"
   },
-  "keywords": ["qr-menu", "react", "express", "sqlite", "vite"],
+  "keywords": ["qr-menu", "react", "express", "vercel"],
   "author": "",
-  "license": "ISC",
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "license": "ISC"
 } 
