@@ -172,7 +172,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>QRメニュー</h1>
+        <h1>ぱのあ亭</h1>
         <p>テーブルID: {qrId}</p>
         {isDevelopment && (
           <div className="dev-badge">

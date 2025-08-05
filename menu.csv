@@ -1,13 +1,16 @@
 大ジャンル,小ジャンル,日本語名,英語名,金額,おすすめ,在庫,画像パス
-Drinks,コーヒー,ブレンドコーヒー,Blend Coffee,350,1,1,drinks/coffee-blend.png
-Drinks,コーヒー,カフェラテ,Cafe Latte,450,1,1,drinks/coffee-latte.png
-Drinks,コーヒー,カプチーノ,Cappuccino,450,0,1,drinks/coffee-cappuccino.png
-Drinks,紅茶,アールグレイ,Early Grey,400,1,1,drinks/tea-earl-grey.png
-Drinks,紅茶,ダージリン,Darjeeling,400,0,1,drinks/tea-darjeeling.png
-Drinks,紅茶,レモンティー,Lemon Tea,450,0,1,drinks/tea-lemon.png
-Drinks,その他,オレンジジュース,Orange Juice,300,0,1,drinks/juice-orange.png
-Drinks,その他,アップルジュース,Apple Juice,300,0,1,drinks/juice-apple.png
-Drinks,その他,ミネラルウォーター,Mineral Water,200,0,1,drinks/water.png
+Drinks,紅茶,マルコポーロ,Marco Polo,450,1,1,drinks/tea-marco-polo.png
+Drinks,紅茶,ドリームティー,Dream Tea,400,0,1,drinks/tea-dream.png
+Drinks,中国茶,阿里山烏龍茶,Alishan Oolong,500,1,1,drinks/tea-alishan-oolong.png
+Drinks,中国茶,阿里山高山茶,Alishan High Mountain,550,1,1,drinks/tea-alishan-high-mountain.png
+Drinks,中国茶,特選烏龍茶（燻製）,Premium Smoked Oolong,600,0,1,drinks/tea-smoked-oolong.png
+Drinks,中国茶,茉莉花茶,Jasmine Tea,450,0,1,drinks/tea-jasmine.png
+Drinks,コーヒー,スパイスティーA（レッドペッパー）,Spice Tea A (Red Pepper),480,1,1,drinks/spice-tea-a.png
+Drinks,コーヒー,スパイスティーB（カルダモン）,Spice Tea B (Cardamom),480,0,1,drinks/spice-tea-b.png
+Drinks,コーヒー,スパイスティーC（五香粉）,Spice Tea C (Five Spice),480,0,1,drinks/spice-tea-c.png
+Drinks,コーヒー,スパイスティーD（シナモン）,Spice Tea D (Cinnamon),480,0,1,drinks/spice-tea-d.png
+Drinks,コーヒー,追加トッピング　生クリーム,Extra Topping - Fresh Cream,100,0,1,drinks/topping-cream.png
+Drinks,その他,くず茶,Kuzu Tea,350,0,1,drinks/kuzu-tea.png
 Desert,チョコレート,チョコレートケーキ,Chocolate Cake,500,1,1,sweets/cake-chocolate.png
 Desert,チョコレート,チョコレートムース,Chocolate Mousse,550,0,1,sweets/mousse-chocolate.png
 Desert,フルーツ,ストロベリーショートケーキ,Strawberry Shortcake,600,1,1,sweets/cake-strawberry.png
