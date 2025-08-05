@@ -1,0 +1,22 @@
+大ジャンル,小ジャンル,日本語名,英語名,金額,おすすめ,在庫,画像パス
+Drinks,コーヒー,ブレンドコーヒー,Blend Coffee,350,1,1,drinks/coffee-blend.png
+Drinks,コーヒー,カフェラテ,Cafe Latte,450,1,1,drinks/coffee-latte.png
+Drinks,コーヒー,カプチーノ,Cappuccino,450,0,1,drinks/coffee-cappuccino.png
+Drinks,紅茶,アールグレイ,Early Grey,400,1,1,drinks/tea-earl-grey.png
+Drinks,紅茶,ダージリン,Darjeeling,400,0,1,drinks/tea-darjeeling.png
+Drinks,紅茶,レモンティー,Lemon Tea,450,0,1,drinks/tea-lemon.png
+Drinks,その他,オレンジジュース,Orange Juice,300,0,1,drinks/juice-orange.png
+Drinks,その他,アップルジュース,Apple Juice,300,0,1,drinks/juice-apple.png
+Drinks,その他,ミネラルウォーター,Mineral Water,200,0,1,drinks/water.png
+Desert,チョコレート,チョコレートケーキ,Chocolate Cake,500,1,1,sweets/cake-chocolate.png
+Desert,チョコレート,チョコレートムース,Chocolate Mousse,550,0,1,sweets/mousse-chocolate.png
+Desert,フルーツ,ストロベリーショートケーキ,Strawberry Shortcake,600,1,1,sweets/cake-strawberry.png
+Desert,フルーツ,アップルパイ,Apple Pie,550,0,1,sweets/pie-apple.png
+Desert,チーズ,チーズケーキ,Cheesecake,500,1,1,sweets/cake-cheese.png
+Desert,チーズ,ティラミス,Tiramisu,650,1,1,sweets/tiramisu.png
+Main,サンドイッチ,ハムサンドイッチ,Ham Sandwich,400,0,1,meals/sandwich-ham.png
+Main,サンドイッチ,チキンサンドイッチ,Chicken Sandwich,450,1,1,meals/sandwich-chicken.png
+Main,サンドイッチ,ツナサンドイッチ,Tuna Sandwich,400,0,1,meals/sandwich-tuna.png
+Main,パスタ,カルボナーラ,Carbonara,800,1,1,meals/pasta-carbonara.png
+Main,パスタ,ペペロンチーノ,Peperoncino,750,0,1,meals/pasta-peperoncino.png
+Main,パスタ,ナポリタン,Napolitan,700,0,1,meals/pasta-napolitan.png 
