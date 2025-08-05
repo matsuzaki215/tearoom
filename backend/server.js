@@ -128,6 +128,21 @@ let cachedMenuData = null;
 
 // APIエンドポイント
 
+// メインAPIエンドポイント
+app.get('/api', (req, res) => {
+  res.json({
+    message: 'QRメニューシステムAPI',
+    version: '1.0.0',
+    endpoints: {
+      menu: '/api/menu',
+      orders: '/api/orders',
+      health: '/api/health',
+      debug: '/api/debug'
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // メニューデータを取得
 app.get('/api/menu', async (req, res) => {
   try {
