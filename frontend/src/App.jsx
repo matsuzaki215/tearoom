@@ -39,7 +39,10 @@ function App() {
   useEffect(() => {
     if (!isValidAccess) return
 
-    fetch('/api/menu')
+    // APIエンドポイントのベースURLを設定
+    const apiBase = isDevelopment ? '' : window.location.origin
+
+    fetch(`${apiBase}/api/menu`)
       .then(response => response.json())
       .then(data => {
         setMenuData(data)
@@ -59,17 +62,20 @@ function App() {
         setMenuData(fallbackData)
         setActiveTab('ドリンク')
       })
-  }, [isValidAccess])
+  }, [isValidAccess, isDevelopment])
 
   // 注文履歴を取得
   useEffect(() => {
     if (qrId && isValidAccess) {
-      fetch(`/api/orders/${qrId}`)
+      // APIエンドポイントのベースURLを設定
+      const apiBase = isDevelopment ? '' : window.location.origin
+      
+      fetch(`${apiBase}/api/orders/${qrId}`)
         .then(response => response.json())
         .then(data => setOrders(data))
         .catch(error => console.error('注文履歴の取得に失敗しました:', error))
     }
-  }, [qrId, isValidAccess])
+  }, [qrId, isValidAccess, isDevelopment])
 
   // メニューをジャンル別にグループ化
   const groupedMenu = menuData.reduce((acc, item) => {
@@ -96,7 +102,10 @@ function App() {
     if (!selectedItem) return
 
     try {
-      const response = await fetch('/api/orders', {
+      // APIエンドポイントのベースURLを設定
+      const apiBase = isDevelopment ? '' : window.location.origin
+      
+      const response = await fetch(`${apiBase}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,15 +118,12 @@ function App() {
 
       if (response.ok) {
         // 注文履歴を更新
-        const newOrder = {
-          id: Date.now(),
-          qr_id: qrId,
-          menu_id: selectedItem.日本語名,
-          timestamp: new Date().toISOString(),
-        }
-        setOrders([...orders, newOrder])
+        const newOrder = await response.json()
+        setOrders(prev => [newOrder, ...prev])
         setShowOrderDialog(false)
         setSelectedItem(null)
+      } else {
+        console.error('注文の送信に失敗しました')
       }
     } catch (error) {
       console.error('注文の送信に失敗しました:', error)
