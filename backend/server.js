@@ -266,6 +266,18 @@ app.get('/api/orders', async (req, res) => {
   }
 });
 
+// デバッグ用エンドポイント
+app.get('/api/debug', (req, res) => {
+  res.json({
+    message: 'API is working',
+    timestamp: new Date().toISOString(),
+    path: req.path,
+    method: req.method,
+    headers: req.headers,
+    url: req.url
+  });
+});
+
 // ヘルスチェックエンドポイント
 app.get('/api/health', async (req, res) => {
   try {

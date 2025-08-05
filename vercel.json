@@ -27,7 +27,9 @@
       "dest": "/frontend/dist/index.html"
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
+  "functions": {
+    "backend/server.js": {
+      "maxDuration": 30
+    }
   }
 } 
