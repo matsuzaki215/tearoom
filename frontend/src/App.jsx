@@ -10,9 +10,11 @@ function App() {
   const [activeTab, setActiveTab] = useState('')
   const [isValidAccess, setIsValidAccess] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [menuLoading, setMenuLoading] = useState(true)
   const [showOrderHistory, setShowOrderHistory] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [imageLoadingStates, setImageLoadingStates] = useState({})
+  const [currentTabImages, setCurrentTabImages] = useState(new Set())
 
   // 開発環境かどうかを判定
   const isDevelopment = process.env.NODE_ENV === 'development' || 
@@ -28,6 +30,7 @@ function App() {
     if (!id && !isDevelopment) {
       setIsValidAccess(false)
       setIsLoading(false)
+      setMenuLoading(false)
       return
     }
     
@@ -57,10 +60,24 @@ function App() {
           }
         })
         setImageLoadingStates(initialImageStates)
-        // 最初のタブを設定
+        // 最初のタブを設定とプリロード
         if (data.length > 0) {
-          setActiveTab(data[0].category)
+          const firstCategory = data[0].category
+          setActiveTab(firstCategory)
+          
+          // 最初のタブの画像をプリロード
+          setTimeout(() => {
+            const firstTabItems = data.filter(item => item.category === firstCategory)
+            firstTabItems.forEach(item => {
+              if (item.image_path && item.image_path.trim()) {
+                preloadImage(item.image_path)
+              }
+            })
+          }, 500) // メニュー表示後にプリロード開始
         }
+        // メニューデータの読み込み完了
+        setMenuLoading(false)
+        setIsLoading(false)
       })
       .catch(error => {
         console.error('メニューの読み込みに失敗しました:', error)
@@ -80,6 +97,19 @@ function App() {
         })
         setImageLoadingStates(initialImageStates)
         setActiveTab('Drinks')
+        
+        // フォールバックデータの画像をプリロード
+        setTimeout(() => {
+          fallbackData.forEach(item => {
+            if (item.image_path && item.image_path.trim()) {
+              preloadImage(item.image_path)
+            }
+          })
+        }, 500)
+        
+        // フォールバックデータの読み込み完了
+        setMenuLoading(false)
+        setIsLoading(false)
       })
   }, [isValidAccess, isDevelopment])
 
@@ -188,12 +218,52 @@ function App() {
     e.target.style.display = 'none'
   }
 
+  // 画像のプリロード
+  const preloadImage = (imagePath) => {
+    if (!imagePath || imageLoadingStates[imagePath] === 'loaded' || imageLoadingStates[imagePath] === 'loading') {
+      return
+    }
+    
+    const img = new Image()
+    img.onload = () => handleImageLoad(imagePath)
+    img.onerror = () => setImageLoadingStates(prev => ({
+      ...prev,
+      [imagePath]: 'error'
+    }))
+    
+    handleImageLoadStart(imagePath)
+    img.src = `/data/imgs/${imagePath}`
+  }
+
+  // タブ切り替え時に画像をプリロード
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName)
+    
+    // タブの画像をプリロード
+    const tabItems = groupedMenu[tabName]
+    if (tabItems) {
+      Object.values(tabItems).flat().forEach(item => {
+        if (item.image_path && item.image_path.trim()) {
+          setTimeout(() => preloadImage(item.image_path), 100) // 少し遅延してプリロード
+        }
+      })
+    }
+  }
+
   // ローディング画面
-  if (isLoading) {
+  if (isLoading || menuLoading) {
     return (
       <div className="loading-screen">
-        <div className="loading-spinner"></div>
-        <p>読み込み中...</p>
+        <div className="loading-content">
+          <div className="loading-spinner"></div>
+          <h2>🍃 tearoom</h2>
+          <p>{menuLoading ? 'メニューを読み込んでいます...' : '初期化中...'}</p>
+          <div className="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
       </div>
     )
   }
@@ -245,7 +315,7 @@ function App() {
             <button
               key={category}
               className={`tab-button ${activeTab === category ? 'active' : ''}`}
-              onClick={() => setActiveTab(category)}
+              onClick={() => handleTabChange(category)}
             >
               {category}
             </button>
