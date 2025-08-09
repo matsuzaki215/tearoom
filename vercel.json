@@ -38,6 +38,10 @@
       "dest": "/frontend/vite.svg"
     },
     {
+      "src": "/admin",
+      "dest": "/frontend/index.html"
+    },
+    {
       "src": "/",
       "dest": "/frontend/index.html"
     },

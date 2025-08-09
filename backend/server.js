@@ -214,10 +214,19 @@ app.post('/api/orders', async (req, res) => {
       return res.status(400).json({ error: 'データが長すぎます' });
     }
 
+    // メニューアイテムの価格を取得
+    let menuItem = null;
+    if (cachedMenuData && cachedMenuData.length > 0) {
+      menuItem = cachedMenuData.find(item => item.name_ja === menu_id || item.name_en === menu_id);
+    }
+
     const newOrder = {
       qr_id,
       menu_id,
-      timestamp: new Date().toISOString()
+      table_id: qr_id, // QR IDをテーブルIDとして使用
+      price: menuItem ? menuItem.price : 0,
+      timestamp: new Date().toISOString(),
+      paid: false // 初期状態は未会計
     };
 
     if (supabase) {
@@ -256,8 +265,8 @@ app.get('/api/orders/:qrId', async (req, res) => {
     }
     
     if (supabase) {
-      // Supabaseを使用
-      const { data, error } = await supabase
+      // Supabaseを使用：paidカラムの存在を確認
+      let { data, error } = await supabase
         .from('orders')
         .select('*')
         .eq('qr_id', qrId)
@@ -265,15 +274,41 @@ app.get('/api/orders/:qrId', async (req, res) => {
         .limit(50);
 
       if (error) {
+        // paidカラムが存在しない場合のフォールバック
+        if (error.code === '42703') {
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('orders')
+            .select('id, qr_id, menu_id, timestamp')
+            .eq('qr_id', qrId)
+            .order('timestamp', { ascending: false })
+            .limit(50);
+          
+          if (fallbackError) {
+            console.error('Supabase注文履歴取得エラー:', fallbackError);
+            return res.status(500).json({ error: '注文履歴の取得に失敗しました' });
+          }
+          
+          return res.json(fallbackData || []);
+        }
+        
         console.error('Supabase注文履歴取得エラー:', error);
         return res.status(500).json({ error: '注文履歴の取得に失敗しました' });
       }
 
-      res.json(data);
+      // paidカラムが存在する場合は未会計のもののみフィルター
+      const unpaidOrders = (data || []).filter(order => !order.paid).map(order => {
+        // table_idやpriceが不正な場合の補正
+        return {
+          ...order,
+          table_id: order.table_id || order.qr_id || 'unknown',
+          price: order.price || 0
+        };
+      });
+      res.json(unpaidOrders);
     } else {
-      // メモリベースのフォールバック
+      // メモリベースのフォールバック：未会計のもののみ
       const filteredOrders = orders
-        .filter(order => order.qr_id === qrId)
+        .filter(order => order.qr_id === qrId && !order.paid)
         .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
         .slice(0, 50);
       
@@ -285,7 +320,145 @@ app.get('/api/orders/:qrId', async (req, res) => {
   }
 });
 
-// 全注文履歴を取得（管理者用）
+// 管理画面用：未会計の注文履歴をテーブル別に取得
+app.get('/api/admin/orders', async (req, res) => {
+  try {
+    if (supabase) {
+      // Supabaseを使用：paidカラムの存在を確認
+      let { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('timestamp', { ascending: false });
+
+      if (error) {
+        // paidカラムが存在しない場合は全ての注文を返す
+        if (error.code === '42703') {
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from('orders')
+            .select('id, qr_id, menu_id, timestamp')
+            .order('timestamp', { ascending: false });
+          
+          if (fallbackError) throw fallbackError;
+          
+          // paid, table_id, priceを追加してフォールバック
+          const ordersWithDefaults = (fallbackData || []).map(order => {
+            // メニューデータから価格を取得
+            let price = 0;
+            if (cachedMenuData && cachedMenuData.length > 0) {
+              const menuItem = cachedMenuData.find(item => 
+                item.name_ja === order.menu_id || item.name_en === order.menu_id
+              );
+              if (menuItem) {
+                price = menuItem.price;
+              }
+            }
+            
+            return {
+              ...order,
+              paid: false,
+              table_id: order.qr_id || 'unknown',
+              price: price
+            };
+          });
+          
+          return res.json(ordersWithDefaults);
+        }
+        throw error;
+      }
+
+      // paidカラムが存在する場合は未会計のもののみフィルター
+      const unpaidOrders = (data || []).filter(order => !order.paid);
+      res.json(unpaidOrders);
+    } else {
+      // ローカル開発用：メモリ内データから未会計のもののみ
+      const unpaidOrders = orders.filter(order => !order.paid);
+      res.json(unpaidOrders);
+    }
+  } catch (error) {
+    console.error('管理画面注文履歴取得エラー:', error);
+    res.status(500).json({ error: '注文履歴の取得に失敗しました' });
+  }
+});
+
+// 管理画面用：テーブルの会計処理
+app.post('/api/admin/checkout', async (req, res) => {
+  try {
+    const { table_id } = req.body;
+    
+    if (!table_id) {
+      return res.status(400).json({ error: 'テーブルIDが必要です' });
+    }
+
+    if (supabase) {
+      // Supabaseを使用：まずテーブル構造をチェック
+      try {
+        const { error } = await supabase
+          .from('orders')
+          .update({ paid: true, paid_at: new Date().toISOString() })
+          .eq('table_id', table_id)
+          .eq('paid', false);
+
+        if (error) throw error;
+        
+        res.json({ success: true, message: `テーブル ${table_id} の会計が完了しました` });
+      } catch (error) {
+        // paidカラムまたはtable_idカラムが存在しない場合
+        if (error.code === '42703' || error.code === 'PGRST204') {
+          console.warn('Supabaseテーブルの構造が不完全です。フォールバック処理を実行:', error.message);
+          
+          // qr_idを使って該当注文を削除（疑似的な会計処理）
+          try {
+            const { error: deleteError } = await supabase
+              .from('orders')
+              .delete()
+              .eq('qr_id', table_id);
+            
+            if (deleteError) {
+              console.error('フォールバック処理エラー:', deleteError);
+              return res.status(500).json({ 
+                error: 'データベースの更新が必要です。マイグレーションを実行してください。',
+                needsMigration: true 
+              });
+            }
+            
+            res.json({ 
+              success: true, 
+              message: `テーブル ${table_id} の注文を処理しました（マイグレーションを推奨）`,
+              warning: 'データベースの更新を推奨します'
+            });
+          } catch (fallbackError) {
+            console.error('フォールバック処理失敗:', fallbackError);
+            return res.status(500).json({ 
+              error: 'データベースの更新が必要です。マイグレーションを実行してください。',
+              needsMigration: true 
+            });
+          }
+        } else {
+          throw error;
+        }
+      }
+    } else {
+      // ローカル開発用：メモリ内データを更新
+      const updatedCount = orders
+        .filter(order => order.table_id === table_id && !order.paid)
+        .map(order => {
+          order.paid = true;
+          order.paid_at = new Date().toISOString();
+          return order;
+        }).length;
+
+      res.json({ 
+        success: true, 
+        message: `テーブル ${table_id} の${updatedCount}件の注文を会計済みにしました` 
+      });
+    }
+  } catch (error) {
+    console.error('会計処理エラー:', error);
+    res.status(500).json({ error: '会計処理に失敗しました' });
+  }
+});
+
+// 全注文履歴を取得（開発者用）
 app.get('/api/orders', async (req, res) => {
   try {
     // 本番環境では認証を追加することを推奨

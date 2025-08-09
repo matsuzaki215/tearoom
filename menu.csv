@@ -1,18 +1,19 @@
 category,subcategory,name_ja,name_en,price,recommended,new,stock,image_path
-Drinks,紅茶,マルコポーロ,Marco Polo,450,1,0,1,drinks/tea_marco_polo.jpg
-Drinks,紅茶,ドリームティー,Dream Tea,400,0,0,1,drinks/tea_marco_polo.jpg
+Drinks,コーヒー,スパイスコーヒーA（Ena）,Spice Tea A (Ena),480,1,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーB（Taya）,Spice Tea B (Taya),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーC（Chisato）,Spice Tea C (Chisato),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーD（Panoa）,Spice Tea D (Panoa),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーE（Kanbe）,Spice Tea E (Kanbe),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,追加トッピング　生クリーム,Extra Topping - Fresh Cream,100,0,0,1,
+Drinks,ジュース,クラフトコーラ,Craft Cola,450,0,1,1,drinks/craft_cola.jpg
+Drinks,ジュース,勝沼ワイナリーのぶどうジュース（白）,White Grape Juice - Katsunuma Winery,500,1,1,1,drinks/grape_juice.jpg
+Drinks,ジュース,勝沼ワイナリーのぶどうジュース（赤）,Red Grape Juice - Katsunuma Winery,500,0,1,1,drinks/grape_juice.jpg
+Drinks,紅茶,マルコポーロ,Marco Polo - Mariage Frères,450,1,0,1,drinks/tea_marco_polo.jpg
+Drinks,紅茶,ドリームティー,Dream Tea - Mariage Frères,400,0,0,1,drinks/tea_marco_polo.jpg
 Drinks,中国茶,阿里山烏龍茶,Alishan Oolong,500,1,0,1,drinks/tea_alisan_oolong.jpg
 Drinks,中国茶,阿里山高山茶,Alishan High Mountain,550,0,0,1,drinks/tea_alisan_oolong.jpg
 Drinks,中国茶,特選烏龍茶（燻製）,Premium Smoked Oolong,600,0,0,1,drinks/tea_alisan_oolong.jpg
 Drinks,中国茶,茉莉花茶,Jasmine Tea,450,0,0,1,drinks/jasmine_tea.jpg
-Drinks,コーヒー,スパイスコーヒーA（レッドペッパー）,Spice Tea A (Red Pepper),480,1,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスコーヒーB（カルダモン）,Spice Tea B (Cardamom),480,0,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスコーヒーC（五香粉）,Spice Tea C (Five Spice),480,0,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスコーヒーD（シナモン）,Spice Tea D (Cinnamon),480,0,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,追加トッピング　生クリーム,Extra Topping - Fresh Cream,100,0,0,1,
-Drinks,ジュース,クラフトコーラ,Craft Cola,450,0,1,1,drinks/craft_cola.jpg
-Drinks,ジュース,ぶどうジュース（白）,White Grape Juice - Katsunuma Winery,500,1,1,1,drinks/grape_juice.jpg
-Drinks,ジュース,ぶどうジュース（赤）,Red Grape Juice - Katsunuma Winery,500,0,1,1,drinks/grape_juice.jpg
 Snacks,東北,アップルスナック（青森）,Apple Snack (Aomori),300,0,0,1,snacks/apple_snack.jpg
 Snacks,東北,くぢら餅（山形）,Kujira Mochi (Yamagata),350,0,0,1,snacks/kujira_mochi.jpg
 Snacks,東北,銀の鼎庵（秋田）,Gin no Teian (Akita),400,0,0,1,snacks/gin_no_teitan.jpg

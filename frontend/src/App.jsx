@@ -304,6 +304,9 @@ function App() {
           <div className="dev-badge">
             <span>🔧 開発モード</span>
             <p>ローカル開発環境ではQRコード不要でアクセス可能です</p>
+            <a href="/admin" className="admin-link">
+              🔐 管理画面
+            </a>
           </div>
         )}
       </header>
@@ -445,7 +448,6 @@ function App() {
             <p>
               <strong>{selectedItem.name_ja}</strong> を注文しますか？
             </p>
-            <p className="price">¥{selectedItem.price}</p>
             <div className="dialog-buttons">
               <button className="confirm-button" onClick={confirmOrder}>
                 はい
