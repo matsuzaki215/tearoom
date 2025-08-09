@@ -16,7 +16,7 @@ function Admin() {
   // 管理画面認証
   const handleAuth = () => {
     // 簡単な認証（実際の運用では適切な認証システムを使用）
-    if (authKey === 'tearoom2024' || isDevelopment) {
+    if (authKey === '3104' || isDevelopment) {
       setIsAuthenticated(true)
       loadTableOrders()
     } else {
