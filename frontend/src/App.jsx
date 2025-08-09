@@ -126,6 +126,17 @@ function App() {
     }
   }, [qrId, isValidAccess, isDevelopment])
 
+  // 注文成功メッセージの自動消去
+  useEffect(() => {
+    if (orderSuccess) {
+      const timer = setTimeout(() => {
+        setOrderSuccess(false)
+      }, 3000) // 3秒後に自動消去
+
+      return () => clearTimeout(timer)
+    }
+  }, [orderSuccess])
+
   // メニューをジャンル別にグループ化
   const groupedMenu = menuData.reduce((acc, item) => {
     // 空のカテゴリをスキップ
@@ -179,7 +190,6 @@ function App() {
         
         // 注文成功の表示
         setOrderSuccess(true)
-        setTimeout(() => setOrderSuccess(false), 2000)
       } else {
         console.error('注文の送信に失敗しました')
       }
@@ -325,12 +335,7 @@ function App() {
           ))}
         </div>
 
-        {/* 注文成功メッセージ */}
-        {orderSuccess && (
-          <div className="order-success">
-            <span>✅ 注文を受け付けました！</span>
-          </div>
-        )}
+        {/* 注文成功メッセージは下部でモーダル表示 */}
 
         {/* メニューコンテナ */}
         <div className="menu-container">
@@ -456,6 +461,26 @@ function App() {
                 いいえ
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 注文成功モーダル */}
+      {orderSuccess && (
+        <div 
+          className="success-modal-overlay"
+          onClick={() => setOrderSuccess(false)}
+        >
+          <div className="success-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="success-icon">✅</div>
+            <h3>注文を受け付けました！</h3>
+            <p>ご注文ありがとうございます</p>
+            <button 
+              className="success-close-btn"
+              onClick={() => setOrderSuccess(false)}
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

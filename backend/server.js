@@ -228,7 +228,8 @@ app.post('/api/orders', async (req, res) => {
       table_id: qr_id, // QR IDをテーブルIDとして使用
       price: menuItem ? menuItem.price : 0,
       timestamp: new Date().toISOString(),
-      paid: false // 初期状態は未会計
+      paid: false, // 初期状態は未会計
+      served: false // 初期状態は未提供
     };
 
 
@@ -302,11 +303,12 @@ app.get('/api/orders/:qrId', async (req, res) => {
       // paidカラムが存在する場合は未会計のもののみフィルター
       const unpaidOrders = (data || []).filter(order => !order.paid).map(order => {
         // table_idやpriceが不正な場合の補正
-        return {
-          ...order,
-          table_id: order.table_id || order.qr_id || 'unknown',
-          price: order.price || 0
-        };
+                 return {
+           ...order,
+           table_id: order.table_id || order.qr_id || 'unknown',
+           price: order.price || 0,
+           served: order.served || false
+         };
       });
       res.json(unpaidOrders);
     } else {
@@ -357,12 +359,13 @@ app.get('/api/admin/orders', async (req, res) => {
               }
             }
             
-            return {
-              ...order,
-              paid: false,
-              table_id: order.qr_id || 'unknown',
-              price: price
-            };
+                         return {
+               ...order,
+               paid: false,
+               table_id: order.qr_id || 'unknown',
+               price: price,
+               served: false
+             };
           });
           
           return res.json(ordersWithDefaults);
@@ -459,6 +462,69 @@ app.post('/api/admin/checkout', async (req, res) => {
   } catch (error) {
     console.error('会計処理エラー:', error);
     res.status(500).json({ error: '会計処理に失敗しました' });
+  }
+});
+
+// 管理画面用：注文の提供状態を切り替え
+app.post('/api/admin/toggle-served', async (req, res) => {
+  try {
+    const { order_id, served } = req.body;
+    
+    if (!order_id || typeof served !== 'boolean') {
+      return res.status(400).json({ error: '注文IDと提供状態が必要です' });
+    }
+
+    if (supabase) {
+      // Supabaseを使用：提供状態を更新
+      try {
+        const updateData = {
+          served: served,
+          served_at: served ? new Date().toISOString() : null
+        };
+
+        const { error } = await supabase
+          .from('orders')
+          .update(updateData)
+          .eq('id', order_id);
+
+        if (error) throw error;
+        
+        res.json({ 
+          success: true, 
+          message: `注文の提供状態を${served ? '完了' : '未完了'}に変更しました`,
+          served: served
+        });
+      } catch (error) {
+        // servedカラムが存在しない場合のフォールバック
+        if (error.code === '42703' || error.code === 'PGRST204') {
+          console.warn('Supabaseテーブルにservedカラムが存在しません。フォールバック処理:', error.message);
+          return res.status(500).json({ 
+            error: 'データベースの更新が必要です。マイグレーションを実行してください。',
+            needsMigration: true 
+          });
+        } else {
+          throw error;
+        }
+      }
+    } else {
+      // ローカル開発用：メモリ内データを更新
+      const order = orders.find(o => o.id === order_id);
+      if (order) {
+        order.served = served;
+        order.served_at = served ? new Date().toISOString() : null;
+        
+        res.json({ 
+          success: true, 
+          message: `注文の提供状態を${served ? '完了' : '未完了'}に変更しました`,
+          served: served
+        });
+      } else {
+        res.status(404).json({ error: '注文が見つかりません' });
+      }
+    }
+  } catch (error) {
+    console.error('提供状態変更エラー:', error);
+    res.status(500).json({ error: '提供状態の変更に失敗しました' });
   }
 });
 

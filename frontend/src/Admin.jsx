@@ -89,6 +89,40 @@ function Admin() {
     }
   }
 
+  // 提供状態の切り替え
+  const handleToggleServed = async (orderId, currentServed) => {
+    try {
+      const apiBase = isDevelopment ? '' : window.location.origin
+      const response = await fetch(`${apiBase}/api/admin/toggle-served`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          order_id: orderId, 
+          served: !currentServed 
+        }),
+      })
+
+      const result = await response.json()
+      
+      if (!response.ok) {
+        if (result.needsMigration) {
+          alert(`エラー: ${result.error}\n\nSupabaseのマイグレーションが必要です。SUPABASE_SETUP.mdを参照してください。`)
+        } else {
+          alert(`エラー: ${result.error || '提供状態の変更に失敗しました'}`)
+        }
+        return
+      }
+
+      // 成功時は無言で更新（UXを良くするため）
+      loadTableOrders() // 再読み込み
+    } catch (error) {
+      console.error('提供状態変更エラー:', error)
+      alert('ネットワークエラーまたはサーバーエラーが発生しました')
+    }
+  }
+
   // テーブルの会計処理
   // 自動更新の設定
   useEffect(() => {
@@ -221,13 +255,24 @@ function Admin() {
                   
                   <div className="table-orders">
                     {orders.map((order, index) => (
-                      <div key={order.id || index} className="order-item">
-                        <div className="order-details">
-                          <span className="order-menu">{order.menu_id}</span>
-                          <span className="order-price">¥{order.price}</span>
+                      <div key={order.id || index} className={`order-item ${order.served ? 'served' : ''}`}>
+                        <div className="order-main">
+                          <div className="order-details">
+                            <span className="order-menu">{order.menu_id}</span>
+                            <span className="order-price">¥{order.price}</span>
+                          </div>
+                          <div className="order-time">
+                            {new Date(order.timestamp).toLocaleString()}
+                          </div>
                         </div>
-                        <div className="order-time">
-                          {new Date(order.timestamp).toLocaleString()}
+                        <div className="order-actions">
+                          <button
+                            className={`served-button ${order.served ? 'served' : 'pending'}`}
+                            onClick={() => handleToggleServed(order.id, order.served)}
+                            title={order.served ? '提供完了' : '未提供'}
+                          >
+                            {order.served ? '✅ 完了' : '⏳ 未提供'}
+                          </button>
                         </div>
                       </div>
                     ))}

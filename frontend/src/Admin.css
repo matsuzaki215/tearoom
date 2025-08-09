@@ -241,7 +241,10 @@
 .order-item {
   padding: 1rem;
   border-bottom: 1px solid #eee;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .order-item:last-child {
@@ -250,6 +253,15 @@
 
 .order-item:hover {
   background-color: #f8f9fa;
+}
+
+.order-item.served {
+  background-color: #f8fff8;
+  border-left: 4px solid #27ae60;
+}
+
+.order-main {
+  flex: 1;
 }
 
 .order-details {
@@ -307,6 +319,49 @@
   box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
 }
 
+/* ===== 提供状態ボタン ===== */
+.order-actions {
+  margin-left: 1rem;
+}
+
+.served-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+.served-button.pending {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: white;
+}
+
+.served-button.pending:hover {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+
+.served-button.served {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+}
+
+.served-button.served:hover {
+  background: linear-gradient(135deg, #229954, #27ae60);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.served-button:active {
+  transform: translateY(0);
+}
+
 /* ===== レスポンシブ ===== */
 @media (max-width: 768px) {
   .admin-header {
@@ -333,6 +388,21 @@
     flex-direction: column;
     gap: 1rem;
     text-align: center;
+  }
+
+  .order-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .order-actions {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .served-button {
+    width: 100%;
   }
 }
 

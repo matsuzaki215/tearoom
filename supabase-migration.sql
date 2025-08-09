@@ -17,17 +17,27 @@ ADD COLUMN IF NOT EXISTS price INTEGER DEFAULT 0;
 ALTER TABLE orders 
 ADD COLUMN IF NOT EXISTS paid_at TIMESTAMP WITH TIME ZONE;
 
--- 5. 既存データの table_id を qr_id と同じ値に設定
+-- 5. served カラムの追加（提供済みフラグ）
+ALTER TABLE orders 
+ADD COLUMN IF NOT EXISTS served BOOLEAN DEFAULT false;
+
+-- 6. served_at カラムの追加（提供完了時刻）
+ALTER TABLE orders 
+ADD COLUMN IF NOT EXISTS served_at TIMESTAMP WITH TIME ZONE;
+
+-- 7. 既存データの table_id を qr_id と同じ値に設定
 UPDATE orders 
 SET table_id = qr_id 
 WHERE table_id IS NULL;
 
--- 6. インデックスの追加（パフォーマンス向上）
+-- 8. インデックスの追加（パフォーマンス向上）
 CREATE INDEX IF NOT EXISTS idx_orders_paid ON orders(paid);
 CREATE INDEX IF NOT EXISTS idx_orders_table_id ON orders(table_id);
 CREATE INDEX IF NOT EXISTS idx_orders_qr_id_paid ON orders(qr_id, paid);
+CREATE INDEX IF NOT EXISTS idx_orders_served ON orders(served);
+CREATE INDEX IF NOT EXISTS idx_orders_paid_served ON orders(paid, served);
 
--- 7. RLS (Row Level Security) ポリシーの更新（必要に応じて）
+-- 9. RLS (Row Level Security) ポリシーの更新（必要に応じて）
 -- ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
 -- 実行後の確認用クエリ
