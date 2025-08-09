@@ -850,3 +850,131 @@ body::before {
   font-size: 0.9rem;
   color: #7f8c8d;
 }
+
+/* ===== 画像ローディング・スケルトンローダー ===== */
+
+/* スケルトンローダーのベーススタイル */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* スケルトンアニメーション */
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 画像用スケルトンローダー */
+.image-skeleton {
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* スケルトン用アイコン */
+.image-skeleton::before {
+  content: '📷';
+  font-size: 2rem;
+  opacity: 0.3;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ローディング状態の画像コンテナ */
+.menu-item-image.loading {
+  position: relative;
+}
+
+.menu-item-image.loading .menu-image {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.menu-item-image.loading .image-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 画像読み込み完了時 */
+.menu-item-image.loaded .menu-image {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.menu-item-image.loaded .image-skeleton {
+  display: none;
+}
+
+/* 画像なしアイテム用のスケルトン調整 */
+.menu-item.no-image .image-skeleton {
+  display: none;
+}
+
+/* ダイアログ画像用ローディング */
+.dialog-image.loading {
+  position: relative;
+}
+
+.dialog-image.loading .dialog-menu-image {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dialog-image.loading .image-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+}
+
+.dialog-image.loaded .dialog-menu-image {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.dialog-image.loaded .image-skeleton {
+  display: none;
+}
+
+/* スピナー（代替ローディング） */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #8b4513;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

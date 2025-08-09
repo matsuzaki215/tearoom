@@ -12,6 +12,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [showOrderHistory, setShowOrderHistory] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
+  const [imageLoadingStates, setImageLoadingStates] = useState({})
 
   // 開発環境かどうかを判定
   const isDevelopment = process.env.NODE_ENV === 'development' || 
@@ -48,6 +49,14 @@ function App() {
       .then(response => response.json())
       .then(data => {
         setMenuData(data)
+        // 画像読み込み状態を初期化
+        const initialImageStates = {}
+        data.forEach(item => {
+          if (item.image_path && item.image_path.trim()) {
+            initialImageStates[item.image_path] = null // null = 未開始
+          }
+        })
+        setImageLoadingStates(initialImageStates)
         // 最初のタブを設定
         if (data.length > 0) {
           setActiveTab(data[0].category)
@@ -62,6 +71,14 @@ function App() {
           { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートケーキ', name_en: 'Chocolate Cake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-chocolate.png' },
         ]
         setMenuData(fallbackData)
+        // フォールバックデータでも画像読み込み状態を初期化
+        const initialImageStates = {}
+        fallbackData.forEach(item => {
+          if (item.image_path && item.image_path.trim()) {
+            initialImageStates[item.image_path] = null
+          }
+        })
+        setImageLoadingStates(initialImageStates)
         setActiveTab('Drinks')
       })
   }, [isValidAccess, isDevelopment])
@@ -146,8 +163,28 @@ function App() {
     setSelectedItem(null)
   }
 
+  // 画像の読み込み開始
+  const handleImageLoadStart = (imagePath) => {
+    setImageLoadingStates(prev => ({
+      ...prev,
+      [imagePath]: 'loading'
+    }))
+  }
+
+  // 画像の読み込み完了
+  const handleImageLoad = (imagePath) => {
+    setImageLoadingStates(prev => ({
+      ...prev,
+      [imagePath]: 'loaded'
+    }))
+  }
+
   // 画像の読み込みエラー時のフォールバック
-  const handleImageError = (e) => {
+  const handleImageError = (e, imagePath) => {
+    setImageLoadingStates(prev => ({
+      ...prev,
+      [imagePath]: 'error'
+    }))
     e.target.style.display = 'none'
   }
 
@@ -234,11 +271,17 @@ function App() {
                     {items.map((item, index) => (
                       <div key={index} className={`menu-item ${item.new === 1 ? 'new' : ''} ${!item.image_path || !item.image_path.trim() ? 'no-image' : ''}`}>
                         {item.image_path && item.image_path.trim() && (
-                          <div className="menu-item-image">
+                          <div className={`menu-item-image ${imageLoadingStates[item.image_path] === 'loading' ? 'loading' : ''} ${imageLoadingStates[item.image_path] === 'loaded' ? 'loaded' : ''}`}>
+                            {/* スケルトンローダー */}
+                            {(!imageLoadingStates[item.image_path] || imageLoadingStates[item.image_path] === 'loading') && (
+                              <div className="image-skeleton"></div>
+                            )}
                             <img
                               src={`/data/imgs/${item.image_path}`}
                               alt={item.name_ja}
-                              onError={handleImageError}
+                              onLoadStart={() => handleImageLoadStart(item.image_path)}
+                              onLoad={() => handleImageLoad(item.image_path)}
+                              onError={(e) => handleImageError(e, item.image_path)}
                               className="menu-image"
                             />
                             {item.recommended === 1 && (
@@ -313,11 +356,17 @@ function App() {
         <div className="dialog-overlay">
           <div className="dialog">
             {selectedItem.image_path && selectedItem.image_path.trim() && (
-              <div className="dialog-image">
+              <div className={`dialog-image ${imageLoadingStates[selectedItem.image_path] === 'loading' ? 'loading' : ''} ${imageLoadingStates[selectedItem.image_path] === 'loaded' ? 'loaded' : ''}`}>
+                {/* スケルトンローダー */}
+                {(!imageLoadingStates[selectedItem.image_path] || imageLoadingStates[selectedItem.image_path] === 'loading') && (
+                  <div className="image-skeleton"></div>
+                )}
                 <img
                   src={`/data/imgs/${selectedItem.image_path}`}
                   alt={selectedItem.name_ja}
-                  onError={handleImageError}
+                  onLoadStart={() => handleImageLoadStart(selectedItem.image_path)}
+                  onLoad={() => handleImageLoad(selectedItem.image_path)}
+                  onError={(e) => handleImageError(e, selectedItem.image_path)}
                   className="dialog-menu-image"
                 />
               </div>
