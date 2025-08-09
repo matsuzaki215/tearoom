@@ -10,6 +10,8 @@ function App() {
   const [activeTab, setActiveTab] = useState('')
   const [isValidAccess, setIsValidAccess] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [showOrderHistory, setShowOrderHistory] = useState(false)
+  const [orderSuccess, setOrderSuccess] = useState(false)
 
   // 開発環境かどうかを判定
   const isDevelopment = process.env.NODE_ENV === 'development' || 
@@ -48,19 +50,19 @@ function App() {
         setMenuData(data)
         // 最初のタブを設定
         if (data.length > 0) {
-          setActiveTab(data[0].大ジャンル)
+          setActiveTab(data[0].category)
         }
       })
       .catch(error => {
         console.error('メニューの読み込みに失敗しました:', error)
         // フォールバック用のサンプルデータ
         const fallbackData = [
-          { 大ジャンル: 'ドリンク', 小ジャンル: 'コーヒー', 日本語名: 'ブレンドコーヒー', 英語名: 'Blend Coffee', 金額: 350, おすすめ: 1, 在庫: 1, 画像パス: 'drinks/coffee-blend.png' },
-          { 大ジャンル: 'ドリンク', 小ジャンル: 'コーヒー', 日本語名: 'カフェラテ', 英語名: 'Cafe Latte', 金額: 450, おすすめ: 1, 在庫: 1, 画像パス: 'drinks/coffee-latte.png' },
-          { 大ジャンル: 'ケーキ', 小ジャンル: 'チョコレート', 日本語名: 'チョコレートケーキ', 英語名: 'Chocolate Cake', 金額: 500, おすすめ: 1, 在庫: 1, 画像パス: 'sweets/cake-chocolate.png' },
+          { category: 'Drinks', subcategory: 'コーヒー', name_ja: 'ブレンドコーヒー', name_en: 'Blend Coffee', price: 350, recommended: 1, new: 0, stock: 1, image_path: 'drinks/coffee-blend.png' },
+          { category: 'Drinks', subcategory: 'コーヒー', name_ja: 'カフェラテ', name_en: 'Cafe Latte', price: 450, recommended: 1, new: 0, stock: 1, image_path: 'drinks/coffee-latte.png' },
+          { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートケーキ', name_en: 'Chocolate Cake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-chocolate.png' },
         ]
         setMenuData(fallbackData)
-        setActiveTab('ドリンク')
+        setActiveTab('Drinks')
       })
   }, [isValidAccess, isDevelopment])
 
@@ -79,18 +81,23 @@ function App() {
 
   // メニューをジャンル別にグループ化
   const groupedMenu = menuData.reduce((acc, item) => {
-    if (!acc[item.大ジャンル]) {
-      acc[item.大ジャンル] = {}
+    // 空のカテゴリをスキップ
+    if (!item.category || !item.category.trim()) {
+      return acc
     }
-    if (!acc[item.大ジャンル][item.小ジャンル]) {
-      acc[item.大ジャンル][item.小ジャンル] = []
+    
+    if (!acc[item.category]) {
+      acc[item.category] = {}
     }
-    acc[item.大ジャンル][item.小ジャンル].push(item)
+    if (!acc[item.category][item.subcategory]) {
+      acc[item.category][item.subcategory] = []
+    }
+    acc[item.category][item.subcategory].push(item)
     return acc
   }, {})
 
-  // 大ジャンルのリストを取得
-  const categories = Object.keys(groupedMenu)
+  // 大ジャンルのリストを取得（undefinedを除外）
+  const categories = Object.keys(groupedMenu).filter(cat => cat !== 'undefined')
 
   // 注文処理
   const handleOrder = (item) => {
@@ -112,7 +119,7 @@ function App() {
         },
         body: JSON.stringify({
           qr_id: qrId,
-          menu_id: selectedItem.日本語名,
+          menu_id: selectedItem.name_ja,
         }),
       })
 
@@ -122,6 +129,10 @@ function App() {
         setOrders(prev => [newOrder, ...prev])
         setShowOrderDialog(false)
         setSelectedItem(null)
+        
+        // 注文成功の表示
+        setOrderSuccess(true)
+        setTimeout(() => setOrderSuccess(false), 2000)
       } else {
         console.error('注文の送信に失敗しました')
       }
@@ -172,8 +183,16 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>ぱのあ亭</h1>
-        <p>テーブルID: {qrId}</p>
+        <div className="header-content">
+          <h1>ぱのあ亭</h1>
+          <p>テーブルID: {qrId}</p>
+          <button 
+            className="order-history-button"
+            onClick={() => setShowOrderHistory(!showOrderHistory)}
+          >
+            📋 注文履歴 ({orders.length})
+          </button>
+        </div>
         {isDevelopment && (
           <div className="dev-badge">
             <span>🔧 開発モード</span>
@@ -196,38 +215,48 @@ function App() {
           ))}
         </div>
 
+        {/* 注文成功メッセージ */}
+        {orderSuccess && (
+          <div className="order-success">
+            <span>✅ 注文を受け付けました！</span>
+          </div>
+        )}
+
         {/* メニューコンテナ */}
         <div className="menu-container">
           {activeTab && groupedMenu[activeTab] && (
             <div className="category">
               <h2 className="category-title">{activeTab}</h2>
-              {Object.entries(groupedMenu[activeTab]).map(([小ジャンル, items]) => (
-                <div key={小ジャンル} className="subcategory">
-                  <h3 className="subcategory-title">{小ジャンル}</h3>
+              {Object.entries(groupedMenu[activeTab]).map(([subcategory, items]) => (
+                <div key={subcategory} className="subcategory">
+                  <h3 className="subcategory-title">{subcategory}</h3>
                   <div className="menu-grid">
                     {items.map((item, index) => (
-                      <div key={index} className={`menu-item ${item.おすすめ === 1 ? 'new' : ''}`}>
-                        <div className="menu-item-image">
-                          <img
-                            src={`/data/imgs/${item.画像パス}`}
-                            alt={item.日本語名}
-                            onError={handleImageError}
-                            className="menu-image"
-                          />
-                        </div>
+                      <div key={index} className={`menu-item ${item.new === 1 ? 'new' : ''} ${!item.image_path || !item.image_path.trim() ? 'no-image' : ''}`}>
+                        {item.image_path && item.image_path.trim() && (
+                          <div className="menu-item-image">
+                            <img
+                              src={`/data/imgs/${item.image_path}`}
+                              alt={item.name_ja}
+                              onError={handleImageError}
+                              className="menu-image"
+                            />
+                          </div>
+                        )}
                         <div className="menu-item-content">
                           <div className="menu-item-header">
-                            <h4 className="menu-item-name">{item.日本語名}</h4>
-                            {item.おすすめ === 1 && (
+                            <h4 className="menu-item-name">{item.name_ja}</h4>
+                            {item.recommended === 1 && (
                               <span className="recommend-badge">おすすめ</span>
                             )}
                           </div>
-                          <p className="menu-item-english">{item.英語名}</p>
-                          <p className="menu-item-price">¥{item.金額}</p>
-                          {item.在庫 === 0 && (
+                          <p className="menu-item-english">{item.name_en}</p>
+                          {/* 価格を一時的に非表示 */}
+                          {/* <p className="menu-item-price">¥{item.price}</p> */}
+                          {item.stock === 0 && (
                             <span className="out-of-stock">売り切れ</span>
                           )}
-                          {item.在庫 === 1 && (
+                          {item.stock === 1 && (
                             <button
                               className="order-button"
                               onClick={() => handleOrder(item)}
@@ -245,42 +274,47 @@ function App() {
           )}
         </div>
 
-        <div className="order-history">
-          <h2>注文履歴</h2>
-          {orders.length === 0 ? (
-            <p>まだ注文がありません</p>
-          ) : (
-            <ul className="order-list">
-              {orders.map((order) => (
-                <li key={order.id} className="order-item">
-                  <span className="order-menu">{order.menu_id}</span>
-                  <span className="order-time">
-                    {new Date(order.timestamp).toLocaleString()}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {/* 注文履歴（右上ボタンで表示/非表示） */}
+        {showOrderHistory && (
+          <div className="order-history">
+            <h2>注文履歴</h2>
+            {orders.length === 0 ? (
+              <p>まだ注文がありません</p>
+            ) : (
+              <ul className="order-list">
+                {orders.map((order) => (
+                  <li key={order.id} className="order-item">
+                    <span className="order-menu">{order.menu_id}</span>
+                    <span className="order-time">
+                      {new Date(order.timestamp).toLocaleString()}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </main>
 
       {/* 注文確認ダイアログ */}
       {showOrderDialog && selectedItem && (
         <div className="dialog-overlay">
           <div className="dialog">
-            <div className="dialog-image">
-              <img
-                src={`/data/imgs/${selectedItem.画像パス}`}
-                alt={selectedItem.日本語名}
-                onError={handleImageError}
-                className="dialog-menu-image"
-              />
-            </div>
+            {selectedItem.image_path && selectedItem.image_path.trim() && (
+              <div className="dialog-image">
+                <img
+                  src={`/data/imgs/${selectedItem.image_path}`}
+                  alt={selectedItem.name_ja}
+                  onError={handleImageError}
+                  className="dialog-menu-image"
+                />
+              </div>
+            )}
             <h3>注文確認</h3>
             <p>
-              <strong>{selectedItem.日本語名}</strong> を注文しますか？
+              <strong>{selectedItem.name_ja}</strong> を注文しますか？
             </p>
-            <p className="price">¥{selectedItem.金額}</p>
+            <p className="price">¥{selectedItem.price}</p>
             <div className="dialog-buttons">
               <button className="confirm-button" onClick={confirmOrder}>
                 はい

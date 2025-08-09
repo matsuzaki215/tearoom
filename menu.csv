@@ -1,25 +1,21 @@
-大ジャンル,小ジャンル,日本語名,英語名,金額,おすすめ,在庫,画像パス
-Drinks,紅茶,マルコポーロ,Marco Polo,450,1,1,drinks/tea-marco-polo.png
-Drinks,紅茶,ドリームティー,Dream Tea,400,0,1,drinks/tea-dream.png
-Drinks,中国茶,阿里山烏龍茶,Alishan Oolong,500,1,1,drinks/tea-alishan-oolong.png
-Drinks,中国茶,阿里山高山茶,Alishan High Mountain,550,1,1,drinks/tea-alishan-high-mountain.png
-Drinks,中国茶,特選烏龍茶（燻製）,Premium Smoked Oolong,600,0,1,drinks/tea-smoked-oolong.png
-Drinks,中国茶,茉莉花茶,Jasmine Tea,450,0,1,drinks/tea-jasmine.png
-Drinks,コーヒー,スパイスティーA（レッドペッパー）,Spice Tea A (Red Pepper),480,1,1,drinks/spice-tea-a.png
-Drinks,コーヒー,スパイスティーB（カルダモン）,Spice Tea B (Cardamom),480,0,1,drinks/spice-tea-b.png
-Drinks,コーヒー,スパイスティーC（五香粉）,Spice Tea C (Five Spice),480,0,1,drinks/spice-tea-c.png
-Drinks,コーヒー,スパイスティーD（シナモン）,Spice Tea D (Cinnamon),480,0,1,drinks/spice-tea-d.png
-Drinks,コーヒー,追加トッピング　生クリーム,Extra Topping - Fresh Cream,100,0,1,drinks/topping-cream.png
-Drinks,その他,くず茶,Kuzu Tea,350,0,1,drinks/kuzu-tea.png
-Desert,チョコレート,チョコレートケーキ,Chocolate Cake,500,1,1,sweets/cake-chocolate.png
-Desert,チョコレート,チョコレートムース,Chocolate Mousse,550,0,1,sweets/mousse-chocolate.png
-Desert,フルーツ,ストロベリーショートケーキ,Strawberry Shortcake,600,1,1,sweets/cake-strawberry.png
-Desert,フルーツ,アップルパイ,Apple Pie,550,0,1,sweets/pie-apple.png
-Desert,チーズ,チーズケーキ,Cheesecake,500,1,1,sweets/cake-cheese.png
-Desert,チーズ,ティラミス,Tiramisu,650,1,1,sweets/tiramisu.png
-Main,サンドイッチ,ハムサンドイッチ,Ham Sandwich,400,0,1,meals/sandwich-ham.png
-Main,サンドイッチ,チキンサンドイッチ,Chicken Sandwich,450,1,1,meals/sandwich-chicken.png
-Main,サンドイッチ,ツナサンドイッチ,Tuna Sandwich,400,0,1,meals/sandwich-tuna.png
-Main,パスタ,カルボナーラ,Carbonara,800,1,1,meals/pasta-carbonara.png
-Main,パスタ,ペペロンチーノ,Peperoncino,750,0,1,meals/pasta-peperoncino.png
-Main,パスタ,ナポリタン,Napolitan,700,0,1,meals/pasta-napolitan.png 
+category,subcategory,name_ja,name_en,price,recommended,new,stock,image_path
+Drinks,紅茶,マルコポーロ,Marco Polo,450,1,0,1,drinks/tea_marco_polo.jpg
+Drinks,紅茶,ドリームティー,Dream Tea,400,0,0,1,drinks/tea_marco_polo.jpg
+Drinks,中国茶,阿里山烏龍茶,Alishan Oolong,500,1,0,1,drinks/tea_alisan_oolong.jpg
+Drinks,中国茶,阿里山高山茶,Alishan High Mountain,550,0,0,1,drinks/tea_alisan_oolong.jpg
+Drinks,中国茶,特選烏龍茶（燻製）,Premium Smoked Oolong,600,0,0,1,drinks/tea_alisan_oolong.jpg
+Drinks,中国茶,茉莉花茶,Jasmine Tea,450,0,0,1,drinks/jasmine_tea.png
+Drinks,コーヒー,スパイスA（レッドペッパー）,Spice Tea A (Red Pepper),480,1,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスB（カルダモン）,Spice Tea B (Cardamom),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスC（五香粉）,Spice Tea C (Five Spice),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスD（シナモン）,Spice Tea D (Cinnamon),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,追加トッピング　生クリーム,Extra Topping - Fresh Cream,100,0,0,1,
+Drinks,ジュース,クラフトコーラ,Craft Cola,450,0,1,1,drinks/craft_cola.png
+Drinks,ジュース,ぶどうジュース（白）,White Grape Juice - Katsunuma Winery,500,1,1,1,drinks/grape_juice.jpg
+Drinks,ジュース,ぶどうジュース（赤）,Red Grape Juice - Katsunuma Winery,500,0,1,1,drinks/grape_juice.jpg
+Snacks,東北,アップルスナック（青森）,Apple Snack (Aomori),300,0,0,1,snacks/apple_snack.jpg
+Snacks,東北,くぢら餅（山形）,Kujira Mochi (Yamagata),350,0,0,1,snacks/kujira_mochi.jpg
+Snacks,東北,銀の鼎庵（秋田）,Gin no Teian (Akita),400,0,0,1,snacks/gin_no_teitan.png
+Snacks,東北,牛タンジャーキー（宮城）,Beef Tongue Jerky (Miyagi),450,1,0,1,snacks/beef_tongue_jerky.png
+Snacks,東北,東雲（岩手）,Shinonome (Iwate),380,0,0,1,snacks/shinonome.png
+Specials,フルーツ,桃のカプレーゼ,Peach Caprese,600,1,1,1,specials/peach_caprese.jpg

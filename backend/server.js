@@ -11,7 +11,7 @@ const path = require('path');
 const supabase = require('./supabase');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 // レート制限用のMap
 const requestCounts = new Map();
@@ -77,27 +77,27 @@ function loadMenuData() {
     if (!fs.existsSync(csvPath)) {
       console.log('CSVファイルが見つかりません。フォールバックデータを使用します。');
       resolve([
-        { 大ジャンル: 'ドリンク', 小ジャンル: 'コーヒー', 日本語名: 'ブレンドコーヒー', 英語名: 'Blend Coffee', 金額: 350, おすすめ: 1, 在庫: 1, 画像パス: 'drinks/coffee-blend.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: 'コーヒー', 日本語名: 'カフェラテ', 英語名: 'Cafe Latte', 金額: 450, おすすめ: 1, 在庫: 1, 画像パス: 'drinks/coffee-latte.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: 'コーヒー', 日本語名: 'カプチーノ', 英語名: 'Cappuccino', 金額: 450, おすすめ: 0, 在庫: 1, 画像パス: 'drinks/coffee-cappuccino.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: '紅茶', 日本語名: 'アールグレイ', 英語名: 'Early Grey', 金額: 400, おすすめ: 1, 在庫: 1, 画像パス: 'drinks/tea-earl-grey.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: '紅茶', 日本語名: 'ダージリン', 英語名: 'Darjeeling', 金額: 400, おすすめ: 0, 在庫: 1, 画像パス: 'drinks/tea-darjeeling.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: '紅茶', 日本語名: 'レモンティー', 英語名: 'Lemon Tea', 金額: 450, おすすめ: 0, 在庫: 1, 画像パス: 'drinks/tea-lemon.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: 'その他', 日本語名: 'オレンジジュース', 英語名: 'Orange Juice', 金額: 300, おすすめ: 0, 在庫: 1, 画像パス: 'drinks/juice-orange.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: 'その他', 日本語名: 'アップルジュース', 英語名: 'Apple Juice', 金額: 300, おすすめ: 0, 在庫: 1, 画像パス: 'drinks/juice-apple.png' },
-        { 大ジャンル: 'ドリンク', 小ジャンル: 'その他', 日本語名: 'ミネラルウォーター', 英語名: 'Mineral Water', 金額: 200, おすすめ: 0, 在庫: 1, 画像パス: 'drinks/water.png' },
-        { 大ジャンル: 'ケーキ', 小ジャンル: 'チョコレート', 日本語名: 'チョコレートケーキ', 英語名: 'Chocolate Cake', 金額: 500, おすすめ: 1, 在庫: 1, 画像パス: 'sweets/cake-chocolate.png' },
-        { 大ジャンル: 'ケーキ', 小ジャンル: 'チョコレート', 日本語名: 'チョコレートムース', 英語名: 'Chocolate Mousse', 金額: 550, おすすめ: 0, 在庫: 1, 画像パス: 'sweets/mousse-chocolate.png' },
-        { 大ジャンル: 'ケーキ', 小ジャンル: 'フルーツ', 日本語名: 'ストロベリーショートケーキ', 英語名: 'Strawberry Shortcake', 金額: 600, おすすめ: 1, 在庫: 1, 画像パス: 'sweets/cake-strawberry.png' },
-        { 大ジャンル: 'ケーキ', 小ジャンル: 'フルーツ', 日本語名: 'アップルパイ', 英語名: 'Apple Pie', 金額: 550, おすすめ: 0, 在庫: 1, 画像パス: 'sweets/pie-apple.png' },
-        { 大ジャンル: 'ケーキ', 小ジャンル: 'チーズ', 日本語名: 'チーズケーキ', 英語名: 'Cheesecake', 金額: 500, おすすめ: 1, 在庫: 1, 画像パス: 'sweets/cake-cheese.png' },
-        { 大ジャンル: 'ケーキ', 小ジャンル: 'チーズ', 日本語名: 'ティラミス', 英語名: 'Tiramisu', 金額: 650, おすすめ: 1, 在庫: 1, 画像パス: 'sweets/tiramisu.png' },
-        { 大ジャンル: '軽食', 小ジャンル: 'サンドイッチ', 日本語名: 'ハムサンドイッチ', 英語名: 'Ham Sandwich', 金額: 400, おすすめ: 0, 在庫: 1, 画像パス: 'meals/sandwich-ham.png' },
-        { 大ジャンル: '軽食', 小ジャンル: 'サンドイッチ', 日本語名: 'チキンサンドイッチ', 英語名: 'Chicken Sandwich', 金額: 450, おすすめ: 1, 在庫: 1, 画像パス: 'meals/sandwich-chicken.png' },
-        { 大ジャンル: '軽食', 小ジャンル: 'サンドイッチ', 日本語名: 'ツナサンドイッチ', 英語名: 'Tuna Sandwich', 金額: 400, おすすめ: 0, 在庫: 1, 画像パス: 'meals/sandwich-tuna.png' },
-        { 大ジャンル: '軽食', 小ジャンル: 'パスタ', 日本語名: 'カルボナーラ', 英語名: 'Carbonara', 金額: 800, おすすめ: 1, 在庫: 1, 画像パス: 'meals/pasta-carbonara.png' },
-        { 大ジャンル: '軽食', 小ジャンル: 'パスタ', 日本語名: 'ペペロンチーノ', 英語名: 'Peperoncino', 金額: 750, おすすめ: 0, 在庫: 1, 画像パス: 'meals/pasta-peperoncino.png' },
-        { 大ジャンル: '軽食', 小ジャンル: 'パスタ', 日本語名: 'ナポリタン', 英語名: 'Napolitan', 金額: 700, おすすめ: 0, 在庫: 1, 画像パス: 'meals/pasta-napolitan.png' }
+        { category: 'Drinks', subcategory: 'コーヒー', name_ja: 'ブレンドコーヒー', name_en: 'Blend Coffee', price: 350, recommended: 1, new: 0, stock: 1, image_path: 'drinks/coffee-blend.png' },
+        { category: 'Drinks', subcategory: 'コーヒー', name_ja: 'カフェラテ', name_en: 'Cafe Latte', price: 450, recommended: 1, new: 0, stock: 1, image_path: 'drinks/coffee-latte.png' },
+        { category: 'Drinks', subcategory: 'コーヒー', name_ja: 'カプチーノ', name_en: 'Cappuccino', price: 450, recommended: 0, new: 0, stock: 1, image_path: 'drinks/coffee-cappuccino.png' },
+        { category: 'Drinks', subcategory: '紅茶', name_ja: 'アールグレイ', name_en: 'Early Grey', price: 400, recommended: 1, new: 0, stock: 1, image_path: 'drinks/tea-earl-grey.png' },
+        { category: 'Drinks', subcategory: '紅茶', name_ja: 'ダージリン', name_en: 'Darjeeling', price: 400, recommended: 0, new: 0, stock: 1, image_path: 'drinks/tea-darjeeling.png' },
+        { category: 'Drinks', subcategory: '紅茶', name_ja: 'レモンティー', name_en: 'Lemon Tea', price: 450, recommended: 0, new: 0, stock: 1, image_path: 'drinks/tea-lemon.png' },
+        { category: 'Drinks', subcategory: 'その他', name_ja: 'オレンジジュース', name_en: 'Orange Juice', price: 300, recommended: 0, new: 0, stock: 1, image_path: 'drinks/juice-orange.png' },
+        { category: 'Drinks', subcategory: 'その他', name_ja: 'アップルジュース', name_en: 'Apple Juice', price: 300, recommended: 0, new: 0, stock: 1, image_path: 'drinks/juice-apple.png' },
+        { category: 'Drinks', subcategory: 'その他', name_ja: 'ミネラルウォーター', name_en: 'Mineral Water', price: 200, recommended: 0, new: 0, stock: 1, image_path: 'drinks/water.png' },
+        { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートケーキ', name_en: 'Chocolate Cake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-chocolate.png' },
+        { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートムース', name_en: 'Chocolate Mousse', price: 550, recommended: 0, new: 0, stock: 1, image_path: 'sweets/mousse-chocolate.png' },
+        { category: 'Specials', subcategory: 'フルーツ', name_ja: 'ストロベリーショートケーキ', name_en: 'Strawberry Shortcake', price: 600, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-strawberry.png' },
+        { category: 'Specials', subcategory: 'フルーツ', name_ja: 'アップルパイ', name_en: 'Apple Pie', price: 550, recommended: 0, new: 0, stock: 1, image_path: 'sweets/pie-apple.png' },
+        { category: 'Specials', subcategory: 'チーズ', name_ja: 'チーズケーキ', name_en: 'Cheesecake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-cheese.png' },
+        { category: 'Specials', subcategory: 'チーズ', name_ja: 'ティラミス', name_en: 'Tiramisu', price: 650, recommended: 1, new: 0, stock: 1, image_path: 'sweets/tiramisu.png' },
+        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'ハムサンドイッチ', name_en: 'Ham Sandwich', price: 400, recommended: 0, new: 0, stock: 1, image_path: 'meals/sandwich-ham.png' },
+        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'チキンサンドイッチ', name_en: 'Chicken Sandwich', price: 450, recommended: 1, new: 0, stock: 1, image_path: 'meals/sandwich-chicken.png' },
+        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'ツナサンドイッチ', name_en: 'Tuna Sandwich', price: 400, recommended: 0, new: 0, stock: 1, image_path: 'meals/sandwich-tuna.png' },
+        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'カルボナーラ', name_en: 'Carbonara', price: 800, recommended: 1, new: 0, stock: 1, image_path: 'meals/pasta-carbonara.png' },
+        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'ペペロンチーノ', name_en: 'Peperoncino', price: 750, recommended: 0, new: 0, stock: 1, image_path: 'meals/pasta-peperoncino.png' },
+        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'ナポリタン', name_en: 'Napolitan', price: 700, recommended: 0, new: 0, stock: 1, image_path: 'meals/pasta-napolitan.png' }
       ]);
       return;
     }
@@ -105,12 +105,19 @@ function loadMenuData() {
     fs.createReadStream(csvPath)
       .pipe(csv())
       .on('data', (row) => {
+        // 空行やカテゴリが空のデータをスキップ
+        if (!row.category || !row.category.trim()) {
+          console.warn('Skipping row with empty category:', row);
+          return;
+        }
+        
         // 数値フィールドを適切に変換
         menuData.push({
           ...row,
-          金額: parseInt(row.金額),
-          おすすめ: parseInt(row.おすすめ),
-          在庫: parseInt(row.在庫)
+          price: parseInt(row.price),
+          recommended: parseInt(row.recommended),
+          new: parseInt(row.new || 0),
+          stock: parseInt(row.stock)
         });
       })
       .on('end', () => {
