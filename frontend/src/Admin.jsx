@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './Admin.css'
+import NotificationService from './NotificationService.js'
 
 function Admin() {
   const [tableOrders, setTableOrders] = useState({})
@@ -7,6 +8,9 @@ function Admin() {
   const [selectedTable, setSelectedTable] = useState('')
   const [authKey, setAuthKey] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [notificationEnabled, setNotificationEnabled] = useState(false)
+  const [lastOrderCount, setLastOrderCount] = useState(0)
+  const [autoRefresh, setAutoRefresh] = useState(true)
 
   // 開発環境かどうかを判定
   const isDevelopment = process.env.NODE_ENV === 'development' || 
@@ -14,10 +18,18 @@ function Admin() {
                        window.location.hostname === '127.0.0.1'
 
   // 管理画面認証
-  const handleAuth = () => {
+  const handleAuth = async () => {
     // 簡単な認証（実際の運用では適切な認証システムを使用）
     if (authKey === '3104' || isDevelopment) {
       setIsAuthenticated(true)
+      
+      // 通知許可を要求
+      const permitted = await NotificationService.requestPermission()
+      setNotificationEnabled(permitted)
+      if (!permitted) {
+        alert('通知を有効にするには、ブラウザの設定で通知を許可してください')
+      }
+      
       loadTableOrders()
     } else {
       alert('認証キーが正しくありません')
@@ -54,6 +66,21 @@ function Admin() {
       }, {})
       
       setTableOrders(groupedOrders)
+      
+      // 新しい注文があるかチェック
+      const currentOrderCount = orders.length
+      if (lastOrderCount > 0 && currentOrderCount > lastOrderCount && notificationEnabled) {
+        // 新しい注文を通知
+        const newOrders = orders.slice(0, currentOrderCount - lastOrderCount)
+        newOrders.forEach(order => {
+          NotificationService.notifyWithSound('🔔 新しい注文!', {
+            body: `テーブル ${order.table_id || order.qr_id}: ${order.menu_id}`,
+            tag: `order-${order.id}`
+          })
+        })
+      }
+      setLastOrderCount(currentOrderCount)
+      
     } catch (error) {
       console.error('注文履歴の読み込みエラー:', error)
       alert('注文履歴の読み込みに失敗しました')
@@ -63,6 +90,17 @@ function Admin() {
   }
 
   // テーブルの会計処理
+  // 自動更新の設定
+  useEffect(() => {
+    if (!isAuthenticated || !autoRefresh) return
+
+    const interval = setInterval(() => {
+      loadTableOrders()
+    }, 10000) // 10秒ごとに更新
+
+    return () => clearInterval(interval)
+  }, [isAuthenticated, autoRefresh])
+
   const handleCheckout = async (tableId) => {
     if (!confirm(`テーブル ${tableId} の注文を会計済みにしますか？`)) {
       return
@@ -144,6 +182,16 @@ function Admin() {
       <header className="admin-header">
         <h1>🍃 tearoom 管理画面</h1>
         <div className="admin-actions">
+          <div className="notification-status">
+            {notificationEnabled ? '🔔' : '🔕'} 
+            <span>{notificationEnabled ? '通知ON' : '通知OFF'}</span>
+          </div>
+          <button 
+            onClick={() => setAutoRefresh(!autoRefresh)}
+            className={`auto-refresh-button ${autoRefresh ? 'active' : ''}`}
+          >
+            {autoRefresh ? '⏸️ 自動更新停止' : '▶️ 自動更新開始'}
+          </button>
           <button onClick={loadTableOrders} className="refresh-button">
             🔄 更新
           </button>

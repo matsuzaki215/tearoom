@@ -142,6 +142,8 @@ function loadMenuData() {
 // メニューデータをキャッシュ
 let cachedMenuData = null;
 
+
+
 // 画像ファイル専用エンドポイント
 app.get('/data/imgs/:category/:filename', (req, res) => {
   const { category, filename } = req.params;
@@ -228,6 +230,8 @@ app.post('/api/orders', async (req, res) => {
       timestamp: new Date().toISOString(),
       paid: false // 初期状態は未会計
     };
+
+
 
     if (supabase) {
       // Supabaseを使用

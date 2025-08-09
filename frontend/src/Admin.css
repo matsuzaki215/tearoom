@@ -115,11 +115,25 @@
 
 .admin-actions {
   display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
+.notification-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.notification-status span {
+  font-weight: 600;
+}
+
 .refresh-button,
-.logout-button {
+.logout-button,
+.auto-refresh-button {
   padding: 0.7rem 1.5rem;
   border: none;
   border-radius: 8px;
@@ -145,6 +159,19 @@
 
 .logout-button:hover {
   background: #c0392b;
+  transform: translateY(-1px);
+}
+
+.auto-refresh-button {
+  background: #f39c12;
+  color: white;
+}
+
+.auto-refresh-button.active {
+  background: #27ae60;
+}
+
+.auto-refresh-button:hover {
   transform: translateY(-1px);
 }
 
