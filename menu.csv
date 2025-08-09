@@ -1,9 +1,9 @@
 category,subcategory,name_ja,name_en,price,recommended,new,stock,image_path
-Drinks,コーヒー,スパイスコーヒーA（Ena）,Spice Tea A (Ena),480,1,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスコーヒーB（Taya）,Spice Tea B (Taya),480,1,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスコーヒーC（Chisato）,Spice Tea C (Chisato),480,1,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスコーヒーD（Panoa）,Spice Tea D (Panoa),480,0,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスコーヒーE（Kanbe）,Spice Tea E (Kanbe),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒー（Ena）,Spice Tea (Ena),480,1,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒー（Taya）,Spice Tea (Taya),480,1,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒー（Chisato）,Spice Tea (Chisato),480,1,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒー（Panoa）,Spice Tea (Panoa),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒー（Kanbe）,Spice Tea (Kanbe),480,0,1,1,drinks/spice_coffee.jpg
 Drinks,コーヒー,追加トッピング　生クリーム,Extra Topping - Fresh Cream,100,0,0,1,
 Drinks,ジュース,クラフトコーラ,Craft Cola,450,0,1,1,drinks/craft_cola.jpg
 Drinks,ジュース,勝沼ワイナリーのぶどうジュース（白）,White Grape Juice - Katsunuma Winery,500,1,1,1,drinks/grape_juice.jpg
