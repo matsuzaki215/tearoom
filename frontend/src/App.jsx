@@ -241,12 +241,15 @@ function App() {
                               onError={handleImageError}
                               className="menu-image"
                             />
+                            {item.recommended === 1 && (
+                              <span className="recommend-badge-overlay">おすすめ</span>
+                            )}
                           </div>
                         )}
                         <div className="menu-item-content">
                           <div className="menu-item-header">
                             <h4 className="menu-item-name">{item.name_ja}</h4>
-                            {item.recommended === 1 && (
+                            {item.recommended === 1 && (!item.image_path || !item.image_path.trim()) && (
                               <span className="recommend-badge">おすすめ</span>
                             )}
                           </div>
@@ -274,24 +277,33 @@ function App() {
           )}
         </div>
 
-        {/* 注文履歴（右上ボタンで表示/非表示） */}
+        {/* 注文履歴ダイアログ */}
         {showOrderHistory && (
-          <div className="order-history">
-            <h2>注文履歴</h2>
-            {orders.length === 0 ? (
-              <p>まだ注文がありません</p>
-            ) : (
-              <ul className="order-list">
-                {orders.map((order) => (
-                  <li key={order.id} className="order-item">
-                    <span className="order-menu">{order.menu_id}</span>
-                    <span className="order-time">
-                      {new Date(order.timestamp).toLocaleString()}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className="dialog-overlay">
+            <div className="dialog order-history-dialog">
+              <div className="dialog-header">
+                <h3>注文履歴</h3>
+                <button className="close-button" onClick={() => setShowOrderHistory(false)}>
+                  ✕
+                </button>
+              </div>
+              <div className="dialog-content">
+                {orders.length === 0 ? (
+                  <p className="no-orders">まだ注文がありません</p>
+                ) : (
+                  <ul className="order-list">
+                    {orders.map((order) => (
+                      <li key={order.id} className="order-item">
+                        <span className="order-menu">{order.menu_id}</span>
+                        <span className="order-time">
+                          {new Date(order.timestamp).toLocaleString()}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </main>

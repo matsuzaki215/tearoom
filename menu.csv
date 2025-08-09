@@ -5,10 +5,10 @@ Drinks,中国茶,阿里山烏龍茶,Alishan Oolong,500,1,0,1,drinks/tea_alisan_o
 Drinks,中国茶,阿里山高山茶,Alishan High Mountain,550,0,0,1,drinks/tea_alisan_oolong.jpg
 Drinks,中国茶,特選烏龍茶（燻製）,Premium Smoked Oolong,600,0,0,1,drinks/tea_alisan_oolong.jpg
 Drinks,中国茶,茉莉花茶,Jasmine Tea,450,0,0,1,drinks/jasmine_tea.png
-Drinks,コーヒー,スパイスA（レッドペッパー）,Spice Tea A (Red Pepper),480,1,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスB（カルダモン）,Spice Tea B (Cardamom),480,0,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスC（五香粉）,Spice Tea C (Five Spice),480,0,1,1,drinks/spice_coffee.jpg
-Drinks,コーヒー,スパイスD（シナモン）,Spice Tea D (Cinnamon),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーA（レッドペッパー）,Spice Tea A (Red Pepper),480,1,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーB（カルダモン）,Spice Tea B (Cardamom),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーC（五香粉）,Spice Tea C (Five Spice),480,0,1,1,drinks/spice_coffee.jpg
+Drinks,コーヒー,スパイスコーヒーD（シナモン）,Spice Tea D (Cinnamon),480,0,1,1,drinks/spice_coffee.jpg
 Drinks,コーヒー,追加トッピング　生クリーム,Extra Topping - Fresh Cream,100,0,0,1,
 Drinks,ジュース,クラフトコーラ,Craft Cola,450,0,1,1,drinks/craft_cola.png
 Drinks,ジュース,ぶどうジュース（白）,White Grape Juice - Katsunuma Winery,500,1,1,1,drinks/grape_juice.jpg

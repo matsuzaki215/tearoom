@@ -437,9 +437,7 @@ body::before {
   transition: transform 0.4s ease;
 }
 
-.menu-item:hover .menu-image {
-  transform: scale(1.1);
-}
+/* 画像拡大機能を削除 */
 
 .menu-item-content {
   padding: 1.5rem;
@@ -470,6 +468,21 @@ body::before {
   font-weight: 600;
   letter-spacing: 1px;
   animation: pulse 2s infinite;
+}
+
+.recommend-badge-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes pulse {
@@ -524,67 +537,7 @@ body::before {
   box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
 }
 
-/* 注文履歴 */
-.order-history {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 3rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 3rem;
-}
-
-.order-history h2 {
-  color: #2c3e50;
-  font-size: 2rem;
-  font-weight: 300;
-  margin-bottom: 2rem;
-  text-align: center;
-  letter-spacing: 2px;
-  position: relative;
-}
-
-.order-history h2::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #2c3e50, transparent);
-}
-
-.order-list {
-  list-style: none;
-}
-
-.order-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s ease;
-  border-radius: 10px;
-}
-
-.order-item:hover {
-  background-color: rgba(44, 62, 80, 0.05);
-}
-
-.order-menu {
-  font-weight: 500;
-  color: #2c3e50;
-  letter-spacing: 0.5px;
-}
-
-.order-time {
-  color: #7f8c8d;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-}
+/* 古い注文履歴スタイルを削除 */
 
 /* ダイアログ */
 .dialog-overlay {
@@ -812,4 +765,88 @@ body::before {
 .menu-item.no-image .menu-item-content {
   padding: 2rem 1.5rem;
   width: 100%;
+}
+
+/* 注文履歴ダイアログのスタイル */
+.order-history-dialog {
+  max-width: 500px;
+  max-height: 80vh;
+  width: 90%;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.4rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #7f8c8d;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  background: #f8f9fa;
+  color: #2c3e50;
+}
+
+.dialog-content {
+  padding: 0 1.5rem 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.no-orders {
+  text-align: center;
+  color: #7f8c8d;
+  font-style: italic;
+  padding: 2rem;
+}
+
+.order-history-dialog .order-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-history-dialog .order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+.order-history-dialog .order-item:hover {
+  background-color: #f8f9fa;
+}
+
+.order-history-dialog .order-item:last-child {
+  border-bottom: none;
+}
+
+.order-history-dialog .order-menu {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.order-history-dialog .order-time {
+  font-size: 0.9rem;
+  color: #7f8c8d;
 }
