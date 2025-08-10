@@ -50,7 +50,7 @@ CREATE TABLE orders (
 ## 4. UI/UX改善
 
 - [x] 大ジャンルごとにタブで分けて表示
-- [x] 商品画像を追加（ローカルのdata/imgs/(drinks|meals|sweets)/xxx.png）
+- [x] 商品画像を追加（ローカルのdata/imgs/(drinks|meals|sweets)/xxx.(png|jpg)）
 
 ---
 
