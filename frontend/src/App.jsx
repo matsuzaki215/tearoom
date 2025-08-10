@@ -304,7 +304,7 @@ function App() {
           <div className="title-section">
             <div className="logo-container">
               <img 
-                src="/logo.png" 
+                src="/data/imgs/design/logo_arcanoah.jpg" 
                 alt="Cafe ARCANOAH" 
                 className="header-logo"
               />

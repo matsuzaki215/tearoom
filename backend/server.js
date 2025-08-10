@@ -113,18 +113,18 @@ function loadMenuData() {
         { category: 'Drinks', subcategory: 'その他', name_ja: 'オレンジジュース', name_en: 'Orange Juice', price: 300, recommended: 0, new: 0, stock: 1, image_path: 'drinks/juice-orange.png' },
         { category: 'Drinks', subcategory: 'その他', name_ja: 'アップルジュース', name_en: 'Apple Juice', price: 300, recommended: 0, new: 0, stock: 1, image_path: 'drinks/juice-apple.png' },
         { category: 'Drinks', subcategory: 'その他', name_ja: 'ミネラルウォーター', name_en: 'Mineral Water', price: 200, recommended: 0, new: 0, stock: 1, image_path: 'drinks/water.png' },
-        { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートケーキ', name_en: 'Chocolate Cake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-chocolate.png' },
-        { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートムース', name_en: 'Chocolate Mousse', price: 550, recommended: 0, new: 0, stock: 1, image_path: 'sweets/mousse-chocolate.png' },
-        { category: 'Specials', subcategory: 'フルーツ', name_ja: 'ストロベリーショートケーキ', name_en: 'Strawberry Shortcake', price: 600, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-strawberry.png' },
-        { category: 'Specials', subcategory: 'フルーツ', name_ja: 'アップルパイ', name_en: 'Apple Pie', price: 550, recommended: 0, new: 0, stock: 1, image_path: 'sweets/pie-apple.png' },
-        { category: 'Specials', subcategory: 'チーズ', name_ja: 'チーズケーキ', name_en: 'Cheesecake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'sweets/cake-cheese.png' },
-        { category: 'Specials', subcategory: 'チーズ', name_ja: 'ティラミス', name_en: 'Tiramisu', price: 650, recommended: 1, new: 0, stock: 1, image_path: 'sweets/tiramisu.png' },
-        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'ハムサンドイッチ', name_en: 'Ham Sandwich', price: 400, recommended: 0, new: 0, stock: 1, image_path: 'meals/sandwich-ham.png' },
-        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'チキンサンドイッチ', name_en: 'Chicken Sandwich', price: 450, recommended: 1, new: 0, stock: 1, image_path: 'meals/sandwich-chicken.png' },
-        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'ツナサンドイッチ', name_en: 'Tuna Sandwich', price: 400, recommended: 0, new: 0, stock: 1, image_path: 'meals/sandwich-tuna.png' },
-        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'カルボナーラ', name_en: 'Carbonara', price: 800, recommended: 1, new: 0, stock: 1, image_path: 'meals/pasta-carbonara.png' },
-        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'ペペロンチーノ', name_en: 'Peperoncino', price: 750, recommended: 0, new: 0, stock: 1, image_path: 'meals/pasta-peperoncino.png' },
-        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'ナポリタン', name_en: 'Napolitan', price: 700, recommended: 0, new: 0, stock: 1, image_path: 'meals/pasta-napolitan.png' }
+        { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートケーキ', name_en: 'Chocolate Cake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'specials/cake-chocolate.png' },
+        { category: 'Specials', subcategory: 'チョコレート', name_ja: 'チョコレートムース', name_en: 'Chocolate Mousse', price: 550, recommended: 0, new: 0, stock: 1, image_path: 'specials/mousse-chocolate.png' },
+        { category: 'Specials', subcategory: 'フルーツ', name_ja: 'ストロベリーショートケーキ', name_en: 'Strawberry Shortcake', price: 600, recommended: 1, new: 0, stock: 1, image_path: 'specials/cake-strawberry.png' },
+        { category: 'Specials', subcategory: 'フルーツ', name_ja: 'アップルパイ', name_en: 'Apple Pie', price: 550, recommended: 0, new: 0, stock: 1, image_path: 'specials/pie-apple.png' },
+        { category: 'Specials', subcategory: 'チーズ', name_ja: 'チーズケーキ', name_en: 'Cheesecake', price: 500, recommended: 1, new: 0, stock: 1, image_path: 'specials/cake-cheese.png' },
+        { category: 'Specials', subcategory: 'チーズ', name_ja: 'ティラミス', name_en: 'Tiramisu', price: 650, recommended: 1, new: 0, stock: 1, image_path: 'specials/tiramisu.png' },
+        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'ハムサンドイッチ', name_en: 'Ham Sandwich', price: 400, recommended: 0, new: 0, stock: 1, image_path: 'snacks/sandwich-ham.png' },
+        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'チキンサンドイッチ', name_en: 'Chicken Sandwich', price: 450, recommended: 1, new: 0, stock: 1, image_path: 'snacks/sandwich-chicken.png' },
+        { category: 'Snacks', subcategory: 'サンドイッチ', name_ja: 'ツナサンドイッチ', name_en: 'Tuna Sandwich', price: 400, recommended: 0, new: 0, stock: 1, image_path: 'snacks/sandwich-tuna.png' },
+        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'カルボナーラ', name_en: 'Carbonara', price: 800, recommended: 1, new: 0, stock: 1, image_path: 'snacks/pasta-carbonara.png' },
+        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'ペペロンチーノ', name_en: 'Peperoncino', price: 750, recommended: 0, new: 0, stock: 1, image_path: 'snacks/pasta-peperoncino.png' },
+        { category: 'Snacks', subcategory: 'パスタ', name_ja: 'ナポリタン', name_en: 'Napolitan', price: 700, recommended: 0, new: 0, stock: 1, image_path: 'snacks/pasta-napolitan.png' }
       ]);
       return;
     }
