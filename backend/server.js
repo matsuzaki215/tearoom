@@ -69,6 +69,24 @@ app.use('/data/imgs', express.static(path.join(__dirname, '../data/imgs'), {
     }
   }
 }));
+
+// 画像ファイルのフォールバック配信（より確実な配信のため）
+app.use('/data/imgs', (req, res, next) => {
+  // 静的ファイル配信で処理できない場合のフォールバック
+  if (req.method === 'GET' && req.path.match(/\.(png|jpg|jpeg|gif|svg)$/i)) {
+    const filePath = path.join(__dirname, '../data/imgs', req.path);
+    if (fs.existsSync(filePath)) {
+      const mimeType = mime.lookup(filePath);
+      if (mimeType) {
+        res.setHeader('Content-Type', mimeType);
+      }
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
+      res.sendFile(filePath);
+      return;
+    }
+  }
+  next();
+});
 app.use(rateLimit);
 app.use(securityHeaders);
 
@@ -153,6 +171,30 @@ app.get('/data/imgs/:category/:filename', (req, res) => {
   if (!fs.existsSync(filePath)) {
     console.log(`Image not found: ${filePath}`);
     return res.status(404).json({ error: 'Image not found' });
+  }
+  
+  // Content-Typeを自動設定
+  const mimeType = mime.lookup(filename);
+  if (mimeType) {
+    res.setHeader('Content-Type', mimeType);
+  }
+  
+  // キャッシュヘッダーを設定
+  res.setHeader('Cache-Control', 'public, max-age=31536000');
+  
+  // ファイルを送信
+  res.sendFile(filePath);
+});
+
+// designフォルダ内の画像専用エンドポイント
+app.get('/data/imgs/design/:filename', (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, '../data/imgs/design', filename);
+  
+  // ファイル存在チェック
+  if (!fs.existsSync(filePath)) {
+    console.log(`Design image not found: ${filePath}`);
+    return res.status(404).json({ error: 'Design image not found' });
   }
   
   // Content-Typeを自動設定

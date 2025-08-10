@@ -19,10 +19,11 @@
       "dest": "/backend/server.js"
     },
     {
-      "src": "/data/imgs/(.*\\.(png|jpg|jpeg))",
+      "src": "/data/imgs/(.*)",
       "dest": "/backend/server.js",
       "headers": {
-        "Cache-Control": "public, max-age=31536000"
+        "Cache-Control": "public, max-age=31536000",
+        "Access-Control-Allow-Origin": "*"
       }
     },
     {
