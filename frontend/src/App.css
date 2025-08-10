@@ -234,31 +234,38 @@ body::before {
   margin: 0 auto;
 }
 
+.title-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.logo-container {
+  flex-shrink: 0;
+}
+
+.header-logo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+}
+
+.header-logo:hover {
+  transform: scale(1.05);
+}
+
+.title-container {
+  text-align: left;
+}
+
 .header h1 {
   color: #2c3e50;
   font-size: 3rem;
   font-weight: 300;
   margin-bottom: 0.5rem;
   letter-spacing: 2px;
-  position: relative;
-}
-
-.header h1::before,
-.header h1::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 60px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #2c3e50, transparent);
-}
-
-.header h1::before {
-  left: -80px;
-}
-
-.header h1::after {
-  right: -80px;
 }
 
 .header p {
@@ -266,6 +273,10 @@ body::before {
   font-size: 1.1rem;
   font-weight: 300;
   letter-spacing: 1px;
+}
+
+.header-actions {
+  flex-shrink: 0;
 }
 
 /* 注文履歴ボタン */
@@ -737,6 +748,24 @@ body::before {
     gap: 1rem;
   }
   
+  .title-section {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .logo-container {
+    margin-bottom: 0;
+  }
+  
+  .header-logo {
+    height: 50px;
+  }
+  
+  .title-container {
+    text-align: center;
+  }
+  
   .header h1 {
     font-size: 2rem;
   }
@@ -829,16 +858,35 @@ body::before {
 .dialog-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 1.5rem 0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
 }
 
-.dialog-header h3 {
-  margin: 0;
+.dialog-title-section {
+  flex: 1;
+}
+
+.dialog-title-section h3 {
   color: #2c3e50;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.table-id {
+  color: #7f8c8d;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* 注文履歴ダイアログ専用のスタイル調整 */
+.order-history-dialog .dialog-title-section h3 {
+  margin-bottom: 0.5rem;
 }
 
 .close-button {

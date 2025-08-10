@@ -301,14 +301,26 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-content">
-          <h1>ぱのあ亭</h1>
-          <p>テーブルID: {qrId}</p>
-          <button 
-            className="order-history-button"
-            onClick={() => setShowOrderHistory(!showOrderHistory)}
-          >
-            📋 注文履歴 ({orders.length})
-          </button>
+          <div className="title-section">
+            <div className="logo-container">
+              <img 
+                src="/data/imgs/design/logo_arcanoah.png" 
+                alt="Cafe ARCANOAH" 
+                className="header-logo"
+              />
+            </div>
+            <div className="title-container">
+              <h1>Cafe ARCANOAH</h1>
+            </div>
+          </div>
+          <div className="header-actions">
+            <button 
+              className="order-history-button"
+              onClick={() => setShowOrderHistory(!showOrderHistory)}
+            >
+              📋 注文履歴 ({orders.length})
+            </button>
+          </div>
         </div>
         {isDevelopment && (
           <div className="dev-badge">
@@ -403,7 +415,10 @@ function App() {
           <div className="dialog-overlay">
             <div className="dialog order-history-dialog">
               <div className="dialog-header">
-                <h3>注文履歴</h3>
+                <div className="dialog-title-section">
+                  <h3>注文履歴</h3>
+                  <p className="table-id">テーブルID: {qrId}</p>
+                </div>
                 <button className="close-button" onClick={() => setShowOrderHistory(false)}>
                   ✕
                 </button>
